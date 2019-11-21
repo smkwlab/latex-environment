@@ -362,3 +362,6 @@ tags
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+# tika app
+tika-app-1.22.jar
