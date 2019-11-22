@@ -101,6 +101,7 @@ https://ueqareer.net/793
 https://github.com/smkwlab/toshi-thesis-branch-test
 
 目次案提出までは、master ブランチで作業しています。
+ブランチの分岐の様子は [Web 上で確認](https://github.com/smkwlab/toshi-thesis-branch-test/network)できます。
 その後 1st-draft ブランチを作成し、その上で作業。
 1st-draft 提出時に pull request を作成し、toshi0806 にreview をリクエスト。
 その後 2nd-draft ブランチを作成し、その上で作業。
