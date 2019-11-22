@@ -17,11 +17,16 @@
 各自、論文管理用のリポジトリを 
 [GitHub の smkwlab アカウントの下に作成](https://github.com/organizations/smkwlab/repositories/new)
 してください。
+←のリンクをクリックしたら、リポジトリー作成画面に遷移します。
 なお、下川研関係者全員が同じ場所にリポジトリを作ります。
 **sotsuron** のような所有者がわからない名前は避けてください。 
 **toshi-sotsuron** のようにユーザ名を含むリポジトリ名にしてください。
 
-また、リポジトリを作成する際に、`Add .gitgnore:` に対して　`TeX` を選択するのを忘れないようにしてください。
+また、リポジトリを作成する際に、`Add .gitgnore:` は　`None` のままで構いません。
+代わりに、このリポジトリに置いている [.gitignore](.gitignore) を、
+各自のリポジトリにコピーしてください。
+なお、このコピーは最初のコミットより先にしてください。
+
 
 目次以外の部分については、空白でも良いですし、テンプレートがそのまま残っていても構いません。
 その状態で、commit と push をしておいてください。
@@ -98,7 +103,7 @@ https://ueqareer.net/793
 
 擬似的にこの操作を以下のリポジトリで実施してみました。
 
-https://github.com/smkwlab/toshi-thesis-branch-test
+ https://github.com/smkwlab/toshi-thesis-branch-test
 
 目次案提出までは、master ブランチで作業しています。
 ブランチの分岐の様子は [Web 上で確認](https://github.com/smkwlab/toshi-thesis-branch-test/network)できます。
