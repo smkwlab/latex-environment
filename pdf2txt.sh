@@ -1,6 +1,24 @@
 #! /bin/sh
 #set -x
 
+# PDF からテキストファイルを生成
+#
+# 使い方： pdf2txt.sh [PDFファイル名]
+#
+# Windows:
+#  - Java が必要です。貸与PCであれば事前にインストール済みのはずです
+#  - git for Windows を事前にインストールしておいてください
+#    - https://proengineer.internous.co.jp/content/columnfeature/6893
+#    - https://git-scm.com/downloads
+#
+# Mac:
+#  - Java が必要です。
+#    - Home Brew をインストールして環境を構築するのがおすすめです
+#      1. Homebrew のインストール
+#        - https://brew.sh/index_ja
+#      2. Java のインストール
+#        - https://qiita.com/y__ueda/items/049009c38068b1cea4a1
+
 # SRC変数に変換対象の pdf ファイルのファイル名を設定
 SRC="sotsuron.pdf"
 
