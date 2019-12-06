@@ -78,6 +78,8 @@ commitやpush も **1st-draft** ブランチ上で処理行ってくださ
 
 [https://ueqareer.net/793](https://ueqareer.net/793)
 
+### 提出時の手順
+
 1st, 2nd, 3rd,... 提出時には以下のような手順になります。
 
 <div id="tejun">
