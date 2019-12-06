@@ -80,6 +80,7 @@ commitやpush も **1st-draft** ブランチ上で処理行ってくださ
 
 1st, 2nd, 3rd,... 提出時には以下のような手順になります。
 
+<div id="tejun">
 1. LaTeX で PDF を作り、[一太郎で校正](README-ichitaro.md)する。
 2. LaTeX で PDF を作り一旦印刷し、その印刷版を読み直し、推敲する。この間、適宜 commit して履歴を残しておく。
 3. 提出しても良い状況になったと思ったら commit する。
@@ -94,7 +95,7 @@ commitやpush も **1st-draft** ブランチ上で処理行ってくださ
 9. 次の版提出用のブランチを作る。
 　この際に、 ``Create branch based on...`` では、現在のブランチを選ぶ。master を選んではいけない。
 10. そのうちに、review が返ってくる。返ってきたら、Pull Request を master に merge する。
-
+</div>
 
 簡単に書くと、以下のような手順です。
 ・自分が今から書く版用のブランチを作る。
