@@ -77,7 +77,7 @@ commitやpush も **1st-draft** ブランチ上で処理行ってくださ
 
 この後の基本的な流れは、以下のページに有る手順に沿って進めます。
 
-https://ueqareer.net/793
+[https://ueqareer.net/793](https://ueqareer.net/793)
 
 1st, 2nd, 3rd,... 提出時には以下のような手順になります。
 
