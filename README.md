@@ -91,7 +91,7 @@ commitやpush も **1st-draft** ブランチ上で処理行ってくださ
 6. GitHub Desktop で ``Branch`` メニュー→``Create Pull Request``
 　ブラウザで GitHub.com の Pull Request 作成画面に移る。
 7. Pull Request のタイトル（「1st 提出」とか）と、簡単な説明を書いて、``Create pull request``ボタンをクリック
-8. 作成した Pull Request に対して、review リクエストを、下川と神屋先生に出す。侑賢あてに出しても良い。
+8. 作成した Pull Request に対して、review リクエストを、下川と神屋先生に出す。大学院生あてに出しても良い。
 8. GitHub Desktop 上部の真中のボタンの``▼``を押して、``New Branch``
 9. 次の版提出用のブランチを作る。
 　この際に、 ``Create branch based on...`` では、現在のブランチを選ぶ。master を選んではいけない。
