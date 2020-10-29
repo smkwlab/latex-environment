@@ -1,0 +1,59 @@
+\documentclass[a4j,12pt]{jarticle}
+\usepackage[top=25mm,bottom=25mm,left=25mm,right=25mm]{geometry}
+\pagestyle{empty}
+\usepackage{otf}%ローマ数字
+
+\renewcommand{\author}[1]{\def\author{#1}}
+\renewcommand{\title}[1]{\def\title{#1}}
+\newcommand{\supervisor}[1]{\def\supervisor{#1}}
+\newcommand{\group}[1]{\def\group{#1}}
+
+\newcommand{\makeheader}{
+\newpage
+\noindent\\九州産業大学 理工学部
+\noindent\\卒業研究発表会グループ\group
+\noindent\\卒業研究概要
+\vskip 20mm
+\begin{center}
+  \title 
+\end{center}
+\vskip 15mm
+}
+\newcommand{\maketailer}{
+\vskip 20mm
+\begin{center}
+\setlength{\tabcolsep}{1mm}
+\begin{tabular}[h]{p{4zw}p{1em}l}
+ 発 表 者&:& \author (情報科学科)\\
+ 指導教員&:& \supervisor
+\end{tabular}
+\end{center}
+}
+\newenvironment{jkabst}{\makeheader}{\maketailer}
+
+
+\begin{document}
+% title, author, supervisor, group の指定は必須
+\title{卒論タイトル}
+\author{17RS509 九産 太郎}
+\supervisor{下川 俊彦 教授}
+\group{1}
+
+% jkabst環境の中に、概要本文を記述する
+\begin{jkabst}
+
+%jkabst 環境の1行目に空行を開けるのを忘れない
+九州産業大学理工学部のプログラミング系の科目では、
+受講生が PC を用いて演習課題に取り組む時間がある。
+受講生の中には講義時間内に演習課題の解答が終わらない受講生がいる。
+そのような受講生を演習担当者が指導するなどの支援が必要である。
+しかし、演習時間中において、
+演習担当者は演習課題の点検や、
+質問に対する指導を行う。
+そのため、クラス全体の演習課題の演習進捗状況を把握することや、
+演習課題の解答に困っている受講生の発見をすることが
+困難という問題点がある。
+
+
+\end{jkabst}
+\end{document}
