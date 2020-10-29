@@ -35,7 +35,7 @@ TXT=${SRC}.txt
 GITIGNORE=.gitignore
 
 # tika アプリをダウンロード
-TIKA='tika-app-1.22.jar'
+TIKA='tika-app-1.24.1.jar'
 TIKA_SRC='http://ftp.jaist.ac.jp/pub/apache/tika/'${TIKA}
 if [ ! -e ${TIKA} ]; then
   echo 'downloading tika app ...'
