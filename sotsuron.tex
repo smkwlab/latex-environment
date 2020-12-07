@@ -11,19 +11,16 @@
 
 
 \title{
-% 1行に入るなら行を分ける必要はないよ
- \Huge{長い長い}\\
- \Huge{卒論タイトル}
+ \Huge{title}\\
  \vspace{5.5cm}\\
 }
 \author{\LARGE{17RS509}\vspace{0.5cm}\\
-\LARGE{九産　太郎}\vspace{2cm}\\
+\LARGE{name}\vspace{2cm}\\
 \LARGE{九州産業大学 理工学部}\vspace{0.5cm}\\
 \LARGE{情報科学科}\vspace{1cm}\\
 }
-\date{\LARGE{令和3年1月}}
+\date{\LARGE{令和x年1月}}
 \pagestyle{plain}
-
 
 \begin{document}
 \maketitle
@@ -31,114 +28,26 @@
 \listoffigures
 \listoftables
 
-
-
 %-----------------------------------------------------------------------------------------------------------------
 
 \chapter{序論}\label{chap:joron}
-% 1文ごとに改行しよう。そのほうが添削が楽なので協力よろしく。
-% 文の途中で改行するのは有り。1行に複数の文を入れるのは止めて。
-本章では、研究背景、研究目的、論文構成について述べる。
 
 \section{研究背景}\label{sec:haikei}
-
-リハビリテーション（以下「リハビリ」と称する）とは、何らかの理由で能力や機能が低下した時に行われる治療やトレーニングである。
-リハビリの手段の一つである理学療法は、病気、けが、高齢、障害などによって運動機能が低下した状態にある人々に対し、
-% 文末の参考文献は句点より前に入れること。
-運動機能の維持・改善を目的に運動、温熱、電気、水、光線などの物理的手段を用いて行われる治療である\cite{igaku}。
-  
     
 \section{研究目的}\label{sec:mokuteki}
 
-本研究の目的は二つある。
-一つ目は、患者が日常生活の動作・環境に近い要素を取り入れた訓練を体験できることである。
-二つ目は、担当者が時間・場所を問わずに患者の訓練結果を把握できるようにすることである。
-
-  
 \section{論文構成}\label{sec:kousei}
 
 本論文は全\ref{keturon}章からなり、
 構成は以下の通りである。
-\ref{chap:kizon}章では佐々木システムについて述べる。
-\ref{chap:jisso}章では本研究で開発した「バランス君」の実装について述べる。
-\ref{chap:keturon}章では本論文のまとめを述べる。
-
-% 実際には、設計や評価を書くのを忘れちゃダメだよ
-
 
 %-----------------------------------------------------------------------------------------------------------------
 
-\chapter{佐々木システム}\label{chap:kizon}
-本論文では、下川研究室で開発したシステムを「佐々木システム」と呼ぶ。
-本章では、佐々木システムの概要と機能、データベース設計、佐々木システムの問題点と問題点の解決手法について述べる。
-
-\section{佐々木システムの概要}\label{sec:kizon_gaiyou}
-佐々木システムは、下肢の骨折や靭帯損傷などの患者がリハビリで行う訓練を補助するシステムである。
-ユーザは訓練を行う患者とそれを支援する担当者の二つの役割に分かれる。
-
-患者が行う訓練には、部分荷重バランス訓練、ゲーム訓練が存在する。
-
-\section{佐々木システムのデータベース設計}\label{sec:kizon_database}
-佐々木システムのデータベースは以下のとおりである。
-
-\begin{itemize}
-  \item ユーザテーブル
-  \item ユーザ訓練記録テーブル
-\end{itemize}
-
-以下でこれらのテーブルについて説明する。
-ユーザ情報はユーザテーブル(表\ref{table:user})に格納する。
-
-\begin{table}[htbp]
-  \caption{ユーザテーブル}\label{table:user}
-  \centering
-  \begin{tabular}{|l|l|l|c|c|p{5cm}|}
-    \hline
-    %ヘッダー行だけ、全項目中央寄せにしてみた
-    \multicolumn{1}{|c|}{論理名} & \multicolumn{1}{c|}{物理名} & \multicolumn{1}{c|}{データ型} & PK & Null & \multicolumn{1}{c|}{備考} \\
-    \hline
-    \hline
-    ユーザID & user\_id & varchar(11) & ○ &  & ユーザのID \\
-    \hline
-    氏名 & user\_name & varchar(32) & & & ユーザの氏名 \\
-    \hline
-    氏名仮名 & user\_name\_kana & varchar(64) & & & ユーザの氏名の仮名 \\
-    \hline
-  \end{tabular}
-\end{table}
-
-%-----------------------------------------------------------------------------------------------------------------
-
-\chapter{バランス君の実装}\label{chap:jisso}
-本章では、バランス君の実装環境、実装画面、ワンタッチ接続機能について述べる。
-
-\section{バランス君ムーブの実装}\label{sec:rihabiri_jisso}
-本節では、患者が訓練を行う「バランス君ムーブ」の実装について述べる。
-
-\subsection{ホーム画面}\label{sec:home}
-ホーム画面は、本アプリケーションを起動時、未使用時に出力される画面である。
-ホーム画面を図\ref{fig:p_home}に示す。
-\textcircled{\scriptsize 1}の緑色の全範囲がボタンになっており、押す事でユーザ選択画面(\ref{sec:all})に遷移する。
-	
-\begin{figure}[htbp]
-  \centering %中央寄せ
-  \fbox{
-%
-% このテンプレートには画像ファイルを含んでいないので、以下の行はコメントアウトしています。
-%
-%    \includegraphics[clip,width = 13cm]{img/p_home.png} %読み込む画像
-%
-  }
-  \caption{ホーム画面}\label{fig:p_home}
-\end{figure}
-
-\subsection{ユーザ選択画面}\label{sec:all}
-ユーザ選択画面は、本アプリケーションを利用する際あらかじめデータベースに登録されているユーザを認証する画面である。
+\chapter{}\label{chap:x}
 
 %-----------------------------------------------------------------------------------------------------------------
 
 \chapter{結論}\label{chap:keturon}
-本章では、本研究のまとめと今後の課題について述べる。
 
 \section{まとめ}\label{sec:matome}
  
@@ -149,48 +58,13 @@
 
 \chapter*{謝辞}
 
-
 %-----------------------------------------------------------------------------------------------------------------
 
 \begin{thebibliography}{99}%参考文献の数が1桁なら9,3桁なら999にする
 
-  \bibitem {igaku} ``公益社団法人 日本理学療法士協会 \verb+|+ 理学療法とは'',
-  \url{http://www.japanpt.or.jp/general/pt/physicaltherapy/}
-    
-  \bibitem {bun_ja} 金丸 侑賢, 神屋 郁子, 下川 俊彦, 梅崎 浩嗣, 榊 泰輔,
-  ``Wii バランスボードを用いた立位荷重リハビリ機器の開発'', 
-  情報処理学会大 78 回全国大会, p.4-791$−$4-792(2016)         
-
-  \bibitem {bun_en} Yuken Kanemaru, Yuko Kamiya, Toshihiko Shimokawa, Hiroshi Umezaki, Taisuke Sakaki, 
-  ``Development of Rehabilitation Device for Standing Position Weight Bearing Exercise Using Wii Balance Board'',
-  Proceedings of ICCAS 2017, 3pages, USB memory (2017)    
-
-  \bibitem {msdn:xaml} ``XAMLとは'',
-  \url{https://msdn.microsoft.com/ja-jp/library/cc295302.aspx}
-
-  \bibitem{php} ``PHP: Hypertext Preprocessor'',
-  \url{ http://www.php.net/ }
-
-  \bibitem{bootstrap} ``Bootstrap - The world's most popular mobile-first and responsive front-end framework.'',      
-  \url{ http://getbootstrap.com/ }
-
 \end{thebibliography}
-
 
 %-----------------------------------------------------------------------------------------------------------------
 \appendix
-
-\chapter{バランス君ムーブ評価アンケート（担当者さん用）}\label{h:tantou}
-
-\begin{verbatim}
-荷重計アプリケーションを使用していただきありがとうございます。お時間がございましたら、アンケートへのご協力よろしくお願いします。
-
-今回から新しく追加した機能は以下の通りです。
-・ターゲットゲーム
-・落下ゲーム
-・ゲーム前のカウントダウン
-・記録のグラフとランキング表示
-・ゲーム終了時の結果表示
-\end{verbatim}
 
 \end{document}
