@@ -1,4 +1,4 @@
-\documentclass[a4j,12pt]{jarticle}
+\documentclass[a4j,12pt]{jsarticle}
 \usepackage[top=25mm,bottom=25mm,left=25mm,right=25mm]{geometry}
 \pagestyle{empty}
 \usepackage{otf}%ローマ数字
@@ -29,7 +29,7 @@
 \end{tabular}
 \end{center}
 }
-\newenvironment{jkabst}{\makeheader}{\maketailer}
+\newenvironment{rsabst}{\makeheader}{\maketailer}
 
 
 \begin{document}
@@ -40,12 +40,12 @@
 %      ↓グループ番号を設定
 \group{1}
 
-% jkabst環境の中に、概要本文を記述する
-\begin{jkabst}
+% rsabst環境の中に、概要本文を記述する
+\begin{rsabst}
 
-%↑jkabst 環境の1行目に空行を開けるのを忘れない
+%↑rsabst 環境の1行目に空行を開けるのを忘れない
 %↓ここから概要の本文
 
 
-\end{jkabst}
+\end{rsabst}
 \end{document}
