@@ -4,7 +4,7 @@ DISTDIR=www.is.kyusan-u.ac.jp.:public_html/sotsuron/
 
 all: sotsuron.zip git-template.zip
 
-sotsuron.zip: sotsuron.tex gaiyou.tex example.tex latexmkrc
+sotsuron.zip: sotsuron.tex gaiyou.tex example.tex example-gaiyou.tex latexmkrc
 	zip $@ $^
 
 git-template.zip: .gitignore README.md README-ichitaro.md pdf2txt.sh
