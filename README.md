@@ -70,7 +70,7 @@ example.tex を更新してはいけない。
 1. ダウンロード先はどこでも良い
 1. ダウンロードした zip ファイルを展開し、先ほど作成した、**ワーキングディレクトリ**に移動させる
 1. GitHub Desktop で卒論のリポジトリをみると、sotsuron.tex, gaiyou.tex, latexmkrc の3つが追加されていることがわかる
-1. 適当にコミットメッセージを入力して、Commit to master をクリック
+1. 適当にコミットメッセージを入力して、Commit to main をクリック
 1. 「Push origin」をクリックして GitHub に push
 1. 以上で、卒業論文を書くための準備が完了
 
@@ -96,7 +96,7 @@ GitHub Desktop のウィンドウの最上部には、３つのボタンが並�
 
 ```
 Current Branch
-master
+main
 ```
 
 と描かれたボタンがある。このボタンの一番右端の``▼``を押す。
@@ -115,7 +115,7 @@ Current Branch
 ```
 
 に変わる。
-これで、ワーキングディレクトリが、従来の **master** ブランチから
+これで、ワーキングディレクトリが、従来の **main** ブランチから
 **1st-draft** ブランチに移動。
 **1st-draft** 提出までは、この状態で作業をする。
 commitやpush も **1st-draft** ブランチ上で処理する。
@@ -154,25 +154,25 @@ Git に commit し、GitHub に push する。
 8. 作成した Pull Request に対して、review リクエストを、下川と神屋先生に出す。大学院生あてに出しても良い。
 8. GitHub Desktop 上部の真中のボタンの``▼``を押して、``New Branch``
 9. 次の版提出用のブランチを作る。
-　この際に、 ``Create branch based on...`` では、現在のブランチを選ぶ。master を選んではいけない。
-10. そのうちに、review が返ってくる。返ってきたら、Pull Request を master に merge する。
+　この際に、 ``Create branch based on...`` では、現在のブランチを選ぶ。main を選んではいけない。
+10. そのうちに、review が返ってくる。返ってきたら、Pull Request を main に merge する。
 
 簡単に書くと、以下のような手順。
 ・自分が今から書く版用のブランチを作る。
 ・そのブランチでその版を書き進める
-・提出時には master への pull requestを出し、review request を出す。
+・提出時には main への pull requestを出し、review request を出す。
 ・提出後すぐに、現在のブランチをベースにして、次の版のブランチを作成する。
 
 擬似的にこの操作を以下のリポジトリで実施してみた。
 
  https://github.com/smkwlab/toshi-thesis-branch-test
 
-目次案提出までは、master ブランチで作業。
+目次案提出までは、main ブランチで作業。
 ブランチの分岐の様子は [Web 上で確認](https://github.com/smkwlab/toshi-thesis-branch-test/network)できる。
 その後 1st-draft ブランチを作成し、その上で作業。
 1st-draft 提出時に pull request を作成し、toshi0806 にreview をリクエスト。
 その後 2nd-draft ブランチを作成し、その上で作業。
-添削終了後に pull request を master に merge。
+添削終了後に pull request を main に merge。
 2nd-draft 提出時も pull request を作成し、toshi0806 に review をリクエスト。
 その後 3rd-draft ブランチで作業中。
 
