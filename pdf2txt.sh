@@ -36,7 +36,7 @@ GITIGNORE=.gitignore
 
 # tika アプリをダウンロード
 TIKA='tika-app-1.27.jar'
-TIKA_SRC='http://ftp.jaist.ac.jp/pub/apache/tika/'${TIKA}
+TIKA_SRC='http://ftp.jaist.ac.jp/pub/apache/tika/1.27/'${TIKA}
 if [ ! -e ${TIKA} ]; then
   echo 'downloading tika app ...'
   curl -o ${TIKA} ${TIKA_SRC}
