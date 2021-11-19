@@ -53,7 +53,7 @@ fi
 
 # tika を使って PDF を txt に変換
 echo converting ${PDF} to ${TXT} ...
-java -jar ${TIKA} --text ${PDF} > ${TXT} 2>/dev/null
+java -jar ${TIKA} --text ${PDF} 2>/dev/null | iconv -c -f UTF-8 -t CP932 > ${TXT}
 unix2dos ${TXT}
 
 # 変換結果の txt ファイルを .gitignore に追加
