@@ -6,7 +6,7 @@
 
 ## Docker のインストール
 1. Windows ならば [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/install/)をインストールする。
-  - Mac なら [Docker Desktop for mac](https://docs.docker.com/desktop/install/mac-install/) をインストール
-1. `docker pull ghcr.io/being24/latex-docker:latest` を実行し LaTeX 実行用コンテナをダウンロードする
-  - Windows ならばコマンドプロンプトあるいは Power Shell 上で実行
-  - Mac ならばターミナル上で実行
+   - Mac なら [Docker Desktop for mac](https://docs.docker.com/desktop/install/mac-install/) をインストール
+2. `docker pull ghcr.io/being24/latex-docker:latest` を実行し LaTeX 実行用コンテナをダウンロードする
+    - Windows ならばコマンドプロンプトあるいは Power Shell 上で実行
+    - Mac ならばターミナル上で実行
