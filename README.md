@@ -17,9 +17,9 @@ GitHub においては、詳細は後述するが、GitHub の branch の機能�
 - [VScode + Docker による環境構築](SETUP-Docker.md)
 
 
-# 卒業論文の作成
+## 卒業論文の作成
 
-## Git 上でのブランチ管理について
+### Git 上でのブランチ管理について
 
 今後、卒業研究を書き勧める上で、たくさんの版（バージョン）を作っていく。
 初版提出締め切り時に提出する版、第2版提出締め切り時に提出する版、その後、提出締切日に提出する版など。
@@ -120,6 +120,8 @@ Git に commit し、GitHub に push する。
 添削終了後に pull request を main に merge。
 2nd-draft 提出時も pull request を作成し、toshi0806 に review をリクエスト。
 その後 3rd-draft ブランチで作業中。
+
+### その他
 
 質問があれば、遠慮なく smkwlabML ML へ。
 きっと、他の人も困っている。
