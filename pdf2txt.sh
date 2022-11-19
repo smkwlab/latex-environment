@@ -35,7 +35,7 @@ TXT=${SRC}.txt
 GITIGNORE=.gitignore
 
 # tika アプリをダウンロード
-TIKA_VERSION='1.27'
+TIKA_VERSION='2.6.0'
 TIKA="tika-app-${TIKA_VERSION=}.jar"
 TIKA_SRC="http://ftp.jaist.ac.jp/pub/apache/tika/${TIKA_VERSION}/${TIKA}"
 
