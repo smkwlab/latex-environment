@@ -7,7 +7,7 @@ all: sotsuron.zip git-template.zip
 sotsuron.zip: sotsuron.tex gaiyou.tex example.tex example-gaiyou.tex latexmkrc
 	zip $@ $^
 
-git-template.zip: .gitignore README.md README-ichitaro.md pdf2txt.sh
+git-template.zip: .gitignore README.md README-ichitaro.md SETUP-Docker.md SETUP-Overleaf.md pdf2txt.sh
 	mkdir $(WORK)
 	cp -p $^ $(WORK)
 	zip -r $@ $(WORK)
