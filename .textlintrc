@@ -1,0 +1,21 @@
+{
+  "filters": {
+    "comments": true,
+  },
+  "rules": {
+    "ja-space-between-half-and-full-width": {
+      "space": "always",
+      "exceptPunctuation": true,
+    },
+    "no-mix-dearu-desumasu": {
+      "preferInHeader": "である", // "である" or "ですます"
+      "preferInBody": "である",// "である" or "ですます"
+      "preferInList": "である",    // "である" or "ですます"
+      // 文末以外でも、敬体(ですます調)と常体(である調)を厳しくチェックするかどうか
+      "strict": false,
+    }
+  },
+  "plugins": [
+    "latex2e"
+  ]
+}
