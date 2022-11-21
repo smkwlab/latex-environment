@@ -16,11 +16,14 @@ else
   DOCKER_RUN=
 endif
 LATEXMK=$(DOCKER_RUN) latexmk
+PDF2TXT=$(DOCKER_RUN) ./pdf2txt.sh
 
 .PHONY: all example clean zip zip-dist zip-clean
-.SUFFIXES: .tex .pdf
+.SUFFIXES: .tex .pdf .txt
 .tex.pdf:
 	$(LATEXMK) $(WORK_DIR)$<
+.pdf.txt:
+	$(PDF2TXT) $<
 
 all: sotsuron.pdf gaiyou.pdf
 
