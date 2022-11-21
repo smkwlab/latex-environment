@@ -10,11 +10,12 @@ ifdef WITH_DOCKER
   DOCKER_OPT=--rm -v
   DOCKER_IMAGE=ghcr.io/being24/latex-docker
   WORK_DIR=/workdir/
-  LATEXMK=$(DOCKER) run $(DOCKER_OPT) `pwd`:$(WORK_DIR) $(DOCKER_IMAGE) latexmk
+  DOCKER_RUN=$(DOCKER) run $(DOCKER_OPT) `pwd`:$(WORK_DIR) $(DOCKER_IMAGE) 
 else
   WORK_DIR=./
-  LATEXMK=latexmk
+  DOCKER_RUN=
 endif
+LATEXMK=$(DOCKER_RUN) latexmk
 
 .PHONY: all example clean zip zip-dist zip-clean
 .SUFFIXES: .tex .pdf
