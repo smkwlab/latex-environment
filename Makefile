@@ -17,15 +17,12 @@ else
   DOCKER_RUN=
 endif
 LATEXMK=$(DOCKER_RUN) latexmk
-PDF2TXT=$(DOCKER_RUN) ./pdf2txt.sh
 TEXTLINT=$(DOCKER_RUN) npx textlint
 
 .PHONY: all example clean zip zip-dist zip-clean
-.SUFFIXES: .tex .pdf .txt
+.SUFFIXES: .tex .pdf
 .tex.pdf:
 	$(LATEXMK) $(WORK_DIR)$<
-.pdf.txt:
-	$(PDF2TXT) $<
 
 all: sotsuron.pdf gaiyou.pdf
 
@@ -53,7 +50,7 @@ zip: sotsuron.zip git-template.zip
 sotsuron.zip: sotsuron.tex gaiyou.tex example.tex example-gaiyou.tex latexmkrc
 	zip $@ $^
 
-git-template.zip: .gitignore README.md README-ichitaro.md SETUP-Docker.md SETUP-Overleaf.md pdf2txt.sh
+git-template.zip: .gitignore README.md README-ichitaro.md SETUP-Docker.md SETUP-Overleaf.md
 	mkdir $(WORK)
 	cp -p $^ $(WORK)
 	zip -r $@ $(WORK)
