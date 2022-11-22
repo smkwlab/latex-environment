@@ -2,29 +2,26 @@
     "latex-workshop.latex.tools": [
         {
             "name": "latexmk",
-            "command": "docker",
+            "command": "latexmk",
             "args": [
-                "run",
-                "--rm",
-                "-v",
-                "%DIR%:/workdir",
-                "ghcr.io/tsuyopon123/latex-docker",
-                "latexmk",
-                "/workdir/%DOCFILE_EXT%"
-            ]
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
         },
         {
             "name": "diff",
-            "command": "docker",
+            "command": "/bin/sh",
             "args": [
-                "run",
-                "--rm",
-                "-v",
-                "%DIR%:/workdir",
-                "ghcr.io/tsuyopon123/latex-docker",
-                "sh",
                 "/workdir/bin/diff.sh"
-            ]
+            ],
+        },
+        {
+            "name": "textlint",
+            "command": "npx",
+            "args": [
+                "textlint",
+                "%DOC%"
+            ],
         },
     ],
     "latex-workshop.latex.recipes": [
@@ -34,6 +31,12 @@
                 "latexmk",
             ]
         },
+        {
+            "name": "lint",
+            "tools": [
+                "textlint",
+            ]
+        }
         {
             "name": "create_diff",
             "tools": [
@@ -78,14 +81,8 @@
         //"*.log",
         //"*/*.log"
     ],
-    "latex-workshop.latexindent.path": "docker",
+    "latex-workshop.latexindent.path": "/bin/sh",
     "latex-workshop.latexindent.args": [
-        "run",
-        "--rm",
-        "-v",
-        "%DIR%:/workdir",
-        "ghcr.io/tsuyopon123/latex-docker",
-        "sh",
         "/workdir/bin/linter.sh",
     ],
     "latex-workshop.view.pdf.external.viewer.command": "open",
