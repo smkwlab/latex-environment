@@ -8,7 +8,8 @@ WITH_DOCKER=yes
 ifdef WITH_DOCKER
   DOCKER=docker
   DOCKER_OPT=--rm -v
-  DOCKER_IMAGE=ghcr.io/being24/latex-docker
+#  DOCKER_IMAGE=ghcr.io/being24/latex-docker
+  DOCKER_IMAGE=ghcr.io/tsuyopon123/latex-docker
   WORK_DIR=/workdir/
   DOCKER_RUN=$(DOCKER) run $(DOCKER_OPT) `pwd`:$(WORK_DIR) $(DOCKER_IMAGE) 
 else
@@ -17,6 +18,7 @@ else
 endif
 LATEXMK=$(DOCKER_RUN) latexmk
 PDF2TXT=$(DOCKER_RUN) ./pdf2txt.sh
+TEXTLINT=$(DOCKER_RUN) npx textlint
 
 .PHONY: all example clean zip zip-dist zip-clean
 .SUFFIXES: .tex .pdf .txt
@@ -29,8 +31,15 @@ all: sotsuron.pdf gaiyou.pdf
 
 example: example.pdf example-gaiyou.pdf
 
+lint: sotsuron.tex
+	$(TEXTLINT) $<
+
+linte: example.tex
+	$(TEXTLINT) $<
+
 clean:
 	$(LATEXMK) -C
+
 
 #
 # for making template zip files
