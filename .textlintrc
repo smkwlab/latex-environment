@@ -4,12 +4,21 @@
     ],
     "filters": {
         "comments": true,
+        "allowlist": {
+            "allow": [
+                "/%.*/", // コメント内の表現はチェックしない
+                "/begin{tabular}[\\s\\S]*?end{tabular}/m" // tabular 環境の中もチェックしない
+            ]
+        }
     },
     "rules": {
         "preset-ja-technical-writing": {
             "max-kanji-continuous-len": {
                 "max": 6,
-                "allow": ["九州産業大学理工学部"]
+                "allow": [
+                    "九州産業大学理工学部",
+                    "福岡女子大学国際文理学部"
+                ]
             },
             "no-invalid-control-character": true,
             "no-unmatched-pair": true,

@@ -57,16 +57,26 @@
 %-----------------------------------------------------------------------------------------------------------------
 
 \chapter*{謝辞}
+% textlint-disable ja-technical-writing/no-mix-dearu-desumasu
+% 謝辞だけは、ですます体が入っても良い
+% ↓ここより下に謝辞を書く
+
+
+%↑ここより上に謝辞を書く
+% textlint-enable ja-technical-writing/no-mix-dearu-desumasu
+% 謝辞以外は、ですます体が入ってはいけない
 
 %-----------------------------------------------------------------------------------------------------------------
-
+% textlint-disable
+% 参考文献リストは textlint 対象外
 \begin{thebibliography}{99}%参考文献の数が1桁なら9,3桁なら999にする
 
   \bibitem{php} ``PHP: Hypertext Preprocessor'',
   \url{ http://www.php.net/ }
 
 \end{thebibliography}
-
+% textlint-enable
+% 参考文献リスト外は textlint 対象
 %-----------------------------------------------------------------------------------------------------------------
 \appendix
 
