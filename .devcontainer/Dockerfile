@@ -1,3 +1,3 @@
-FROM ghcr.io/tsuyopon123/latex-docker
+FROM ghcr.io/smkwlab/latex-docker
 
 CMD ["bash"]

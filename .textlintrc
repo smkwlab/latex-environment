@@ -4,12 +4,6 @@
     ],
     "filters": {
         "comments": true,
-        "allowlist": {
-            "allow": [
-                "github.com",
-                "github.com/github/"
-            ]
-        }
     },
     "rules": {
         "preset-ja-technical-writing": {
