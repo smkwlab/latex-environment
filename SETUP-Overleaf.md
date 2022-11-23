@@ -14,7 +14,7 @@ Overleaf の標準の機能では branch の利用がサポートされていな
 
 ## Overleaf の初期設定
 
-1. [卒業論文テンプレートプロジェクト](https://github.com/smkwlab/sotsuron-template/raw/master/sotsuron.zip) 
+1. [卒業論文テンプレートプロジェクト](sotsuron.zip)
 (sotsuron.zip) を自分の PC にダウンロードする。フォルダはどこでもよい。このファイルを展開する必要はない。
 1. [Overleaf](https://ja.overleaf.com/project) で 「新規プロジェクト」をクリック
 1. 「プロジェクトのアップロード」を選択
@@ -41,7 +41,7 @@ example.tex に、仮想的な卒論の本文を少し記述している。
 example.tex を更新してはいけない。
 
 ## GitHub の初期設定
-1. [GitHubリポジトリテンプレート](https://github.com/smkwlab/sotsuron-template/raw/master/git-template.zip) 
+1. [GitHubリポジトリテンプレート](git-template.zip)
 (git-template.zip) を自分の PC にダウンロードする。
 1. git-template.zip を展開すると sotsuron フォルダが生成される
 1. sotsuron フォルダを、適当なフォルダ (「ドキュメント」など）に移動する
