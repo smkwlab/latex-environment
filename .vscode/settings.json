@@ -12,7 +12,7 @@
             "name": "diff",
             "command": "/bin/sh",
             "args": [
-                "/workdir/bin/diff.sh"
+                "/workspaces/sotsuron-template/bin/diff.sh"
             ],
         },
         {
