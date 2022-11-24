@@ -8,16 +8,18 @@ WITH_DOCKER=yes
 ifdef WITH_DOCKER
   DOCKER=docker
   DOCKER_OPT=--rm -v
-#  DOCKER_IMAGE=ghcr.io/being24/latex-docker
-  DOCKER_IMAGE=ghcr.io/tsuyopon123/latex-docker
-  WORK_DIR=/workdir/
-  DOCKER_RUN=$(DOCKER) run $(DOCKER_OPT) `pwd`:$(WORK_DIR) $(DOCKER_IMAGE) 
+  DOCKER_IMAGE=ghcr.io/smkwlab/latex-docker
+  WORK_DIR=/workspaces/$(basename $(CURDIR))/
+  DOCKER_RUN=$(DOCKER) run $(DOCKER_OPT) `pwd`:$(WORK_DIR) -w $(WORK_DIR) $(DOCKER_IMAGE) 
+.PHONY: sh
+sh:
+	$(DOCKER) run -it $(DOCKER_OPT) `pwd`:$(WORK_DIR) -w $(WORK_DIR) $(DOCKER_IMAGE) /bin/bash
 else
   WORK_DIR=./
   DOCKER_RUN=
 endif
 LATEXMK=$(DOCKER_RUN) latexmk
-TEXTLINT=$(DOCKER_RUN) npx textlint
+TEXTLINT=$(DOCKER_RUN) textlint
 
 .PHONY: all example clean zip zip-dist zip-clean
 .SUFFIXES: .tex .pdf
@@ -36,6 +38,7 @@ linte: example.tex
 
 clean:
 	$(LATEXMK) -C
+	rm *~
 
 
 #
