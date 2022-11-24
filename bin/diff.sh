@@ -1,8 +1,8 @@
 #!/bin/bash
 
-git config --global --add safe.directory /workdir
+git config --global --add safe.directory /workspace
 # 一つ前のコミットとこのコミットの差分
-latexdiff-vc -e utf8 -t CFONT --git --flatten --force -r HEAD main.tex
+latexdiff-vc -e utf8 -t CFONT --git --flatten --force -r HEAD sotsuron.tex
 
 # 現在と指定したIDの差分
 # latexdiff-vc -e utf8 -t CFONT --git --flatten --force -r commit-ID main.tex
