@@ -6,8 +6,7 @@
         "comments": true,
         "allowlist": {
             "allow": [
-                "/%.*/", // コメント内の表現はチェックしない
-                "/begin{tabular}[\\s\\S]*?end{tabular}/m" // tabular 環境の中もチェックしない
+                "/%[\\s\\S]*?$/m"
             ]
         }
     },
@@ -23,7 +22,7 @@
             "no-invalid-control-character": true,
             "no-unmatched-pair": true,
             "sentence-length": {
-                "max": 128
+                "max": 100
             },
             "no-nfd": true,
             "no-doubled-joshi": {
@@ -52,17 +51,16 @@
                 "allowEmojiAtEnd": false,
                 "forceAppendPeriod": true
             },
+            "ja-space-between-half-and-full-width": {
+                "space": "always",
+                "exceptPunctuation": true
+            },
             "no-mix-dearu-desumasu": {
                 "preferInHeader": "である",
                 "preferInBody": "である",
                 "preferInList": "である",
                 "strict": true
             }
-//        },
-//        "prh": {
-//            "rulePaths": [
-//                "./prh.yml"
-//            ]
         }
     }
 }
