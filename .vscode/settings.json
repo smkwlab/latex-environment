@@ -2,29 +2,27 @@
     "latex-workshop.latex.tools": [
         {
             "name": "latexmk",
-            "command": "docker",
+            "command": "latexmk",
             "args": [
-                "run",
-                "--rm",
-                "-v",
-                "%DIR%:/workdir",
-                "ghcr.io/being24/latex-docker",
-                "latexmk",
-                "/workdir/%DOCFILE_EXT%"
-            ]
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
         },
         {
             "name": "diff",
-            "command": "docker",
+            "command": "/bin/sh",
             "args": [
-                "run",
-                "--rm",
-                "-v",
-                "%DIR%:/workdir",
-                "ghcr.io/being24/latex-docker",
-                "sh",
-                "/workdir/bin/diff.sh"
-            ]
+                "%WORKSPACE_FOLDER%/bin/diff.sh",
+                "%WORKSPACE_FOLDER%",
+                "%DOCFILE_EXT%"
+            ],
+        },
+        {
+            "name": "textlint",
+            "command": "textlint",
+            "args": [
+                "%DOC_EXT%"
+            ],
         },
     ],
     "latex-workshop.latex.recipes": [
@@ -32,6 +30,12 @@
             "name": "compile",
             "tools": [
                 "latexmk",
+            ]
+        },
+        {
+            "name": "lint",
+            "tools": [
+                "textlint",
             ]
         },
         {
@@ -43,6 +47,7 @@
     ],
     "latex-workshop.latex.autoBuild.run": "never",
     "latex-workshop.latex.watch.delay": 1000,
+    "latex-workshop.synctex.afterBuild.enabled": true,
     "latex-workshop.view.pdf.viewer": "tab",
     "latex-workshop.latex.autoClean.run": "onBuilt",
     "latex-workshop.latex.clean.fileTypes": [
@@ -64,7 +69,6 @@
         "*.ist",
         "*.fls",
         "*.fdb_latexmk",
-        "*.synctex.gz",
         "_minted*",
         "*.nav",
         "*.snm",
@@ -78,14 +82,8 @@
         //"*.log",
         //"*/*.log"
     ],
-    "latex-workshop.latexindent.path": "docker",
+    "latex-workshop.latexindent.path": "/bin/sh",
     "latex-workshop.latexindent.args": [
-        "run",
-        "--rm",
-        "-v",
-        "%DIR%:/workdir",
-        "ghcr.io/being24/latex-docker",
-        "sh",
         "/workdir/bin/linter.sh",
     ],
     "latex-workshop.view.pdf.external.viewer.command": "open",

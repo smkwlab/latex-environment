@@ -65,7 +65,7 @@ example.tex を更新してはいけない。
 1. 「メニュー」から「ダウンロード」のところの「ソース」をクリック
 1. ダウンロード先はどこでも良い
 1. ダウンロードした zip ファイルを展開し、先ほど作成した、**ワーキングディレクトリ**に移動させる
-1. GitHub Desktop で卒論のリポジトリをみると、sotsuron.tex, gaiyou.tex, latexmkrc の3つが追加されていることがわかる
+1. GitHub Desktop で卒論のリポジトリをみると、sotsuron.tex, gaiyou.tex, latexmkrc の 3つが追加されていることがわかる
 1. 適当にコミットメッセージを入力して、Commit to main をクリック
 1. 「Push origin」をクリックして GitHub に push
 1. 以上で、卒業論文を書くための準備が完了
