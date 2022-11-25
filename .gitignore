@@ -369,16 +369,14 @@ tika-app-*.jar
 # for markdown preview
 *.html
 
-sotsuron.txt
 sotsuron.pdf
-gaiyou.txt
 gaiyou.pdf
-example.txt
 example.tex
 example.pdf
-example-gaiyou.txt
 example-gaiyou.tex
 example-gaiyou.pdf
+*-diffHEAD.tex
 
 sotsuron.zip
 git-template.zip
+latex-update.zip
