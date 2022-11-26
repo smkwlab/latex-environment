@@ -353,8 +353,6 @@ tags
 # Persistent undo
 [._]*.un~
 
-*~
-
 ## VScode specific
 .vscode/*
 !.vscode/settings.json
@@ -363,20 +361,7 @@ tags
 !.vscode/extensions.json
 *.code-workspace
 
-# tika app
-tika-app-*.jar
-
 # for markdown preview
 *.html
 
-sotsuron.pdf
-gaiyou.pdf
-example.tex
-example.pdf
-example-gaiyou.tex
-example-gaiyou.pdf
 *-diffHEAD.tex
-
-sotsuron.zip
-git-template.zip
-latex-update.zip
