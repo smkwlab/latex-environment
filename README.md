@@ -47,3 +47,7 @@ Dev Container に関するダイアログが表示されるので、`Reopen in C
 ### 4.1 週間報告用
 
 ### 4.2 卒業論文用
+
+1. `VScode` の `ターミナル` メニューから、`新しいターミナル` をクリック
+2. `VScode` 内で LaTeX コンテナ上の shell が起動する
+3. `./bin/setup-sotsuron.sh` を実行
