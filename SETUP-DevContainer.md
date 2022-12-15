@@ -1,22 +1,22 @@
-# VSCode + Dev Container を用いた LaTeX 処理環境の構築
+# VSCode + DevContainer を用いた LaTeX 処理環境の構築
 
 まず `Visual Stdio Code` (VScode) の環境を構築する。
 次に　`Windows Subsystem for Linux`(WSL) をインストールする。
-WSL は Dev Container で利用するコンテナ環境を実行するために必要である。
+WSL は `LaTeX 処理系` 用コンテナを実行するために利用する。
 最後に `Docker Desktop` をインストールする。
 Docker Desktop は Dev Container のバックエンドとなり、自動的にコンテナを管理する。
-`LaTeX 処理系`は Dev Container が自動的にインストールしてくれるので気にしなくて良い。
+`LaTeX 処理系`は VScode の DevContainer 機能が自動的にインストールする。
 
 ## 1. VScode の環境構築
 1. VScode をインストールする。
 
 - 近年の貸与 PC では標準でインストール済
   - 貸与PC以外の Windows マシンにインストールする場合は、`Microsoft Store` を使うのがお勧め
-    1. Windows 上で `Micorosoft Store` を起動
+    1. Windows 上で `Microsoft Store` を起動
     2. ストアアプリ内の検索窓を使って `vscode` を検索
     3. `Visual Studio Code` が見つかるはずなのでインストール
-  - Mac にインストールする場合には `vscode install mac`などで検索してみよう
-2. VScode に [LaTeX Workshop 拡張](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)をインストールする
+  - Mac 上に環境を構築する場合には `vscode install mac`などで検索し、インストール
+2. VScode に [LaTeX Workshop 拡張](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)をインストール
 
 ## 2. WSL のインストール
 - 既に WSL インストール済みならば 3. Docker Desktop のインストールに進む
