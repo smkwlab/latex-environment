@@ -7,19 +7,19 @@ WSL は `LaTeX 処理系` 用コンテナを実行するために利用する。
 Docker Desktop は Dev Container のバックエンドとなり、自動的にコンテナを管理する。
 `LaTeX 処理系`は VScode の DevContainer 機能が自動的にインストールする。
 
-## 1. VScode の環境構築
-1. VScode をインストールする。
+## 1. VScode のインストール
 
 - 近年の貸与 PC では標準でインストール済
-  - 貸与PC以外の Windows マシンにインストールする場合は、`Microsoft Store` を使うのがお勧め
+- 貸与PC以外の Windows マシンにインストールする場合は、`Microsoft Store` を使うのがお勧め
     1. Windows 上で `Microsoft Store` を起動
     2. ストアアプリ内の検索窓を使って `vscode` を検索
     3. `Visual Studio Code` が見つかるはずなのでインストール
-  - Mac 上に環境を構築する場合には `vscode install mac`などで検索し、インストール
-2. VScode に [LaTeX Workshop 拡張](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)をインストール
+- Mac 上に環境を構築する場合には `vscode install mac`などで検索し、インストール
 
 ## 2. WSL のインストール
-- 既に WSL インストール済みならば 3. Docker Desktop のインストールに進む
+
+既に WSL インストール済みならば [3. Docker Desktop のインストール](#3-docker-desktop-のインストール)に進む
+  
 1. 管理者権限の `PowerShell` を立ち上げる
     1. スタートメニューから `Windows Powershell` のフォルダを開く
     2. `Windows Powershell` メニューを右クリック
@@ -29,10 +29,11 @@ Docker Desktop は Dev Container のバックエンドとなり、自動的に�
 3. `このアプリがデバイスに変更を加えることを許可しますか?` というダイアログが表示されたら `はい` を選択
 4. `要求された操作は正常に終了しました。変更を有効にするには、システムを再起動する必要があります。` というメッセージが表示されるので、PC を再起動
 5. 再起動後 `Installing, this may take a few minutes...` と表示されるので、しばらく待つ
-6. `Enter new UNIX username:` というプロンプトに対しては、smkwlab.net のアカウント名を入力
+6. `Enter new UNIX username:` というプロンプトに対しては、`smkwlab.net のアカウント名`を入力
 7. `New password:` に対しては、好きなパスワードを入力。忘れた場合リカバリが困難なので注意
 8. `Retype new password:` に対しては、7. と同じパスワードを再度入力
 
 ## 3. Docker Desktop のインストール
-- Windows なら [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/install/)をインストールする。
-- Mac なら [Docker Desktop for mac](https://docs.docker.com/desktop/install/mac-install/) をインストールする。
+
+- Windows なら [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/install/)をインストール
+- Mac なら [Docker Desktop for mac](https://docs.docker.com/desktop/install/mac-install/) をインストール
