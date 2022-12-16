@@ -5,11 +5,10 @@
 
 ## 1. LaTeX 環境構築
 
-LaTeX の環境構築方法として、VScode + DevContainer を利用する。
-
+LaTeX の環境として、VScode + DevContainer を利用する。
 [VScode + DevContainer 環境構築](SETUP-DevContainer.md)の手順に従って環境を構築する。
 
-PC上のディスクの残り容量が少ないときには Web サービスである [Overleaf](https://ja.overleaf.com/) も利用可能である。
+PC上のディスクの残り容量が少ないときは Web サービスである [Overleaf](https://ja.overleaf.com/) も利用可能である。
 しかし、Overleaf を使う場合 GitHub 連携が複雑になるので、この方法は推奨しない。
 
 ## 2. リポジトリの作成
@@ -22,11 +21,12 @@ PC上のディスクの残り容量が少ないときには Web サービスで�
 
 1. [このリポジトリ](https://github.com/smkwlab/latex-environment)の
 `Use this template` ボタンを押して `Create a new repository` を選択
-2. リポジトリを作成する際、`Owner` は `smkwlab` のままにしておくと、
-下川を含む研究室のメンバーがアクセスできるので添削作業などがスムーズになる。
-他の人に見られては困るような書類の場合は、自分のアカウント下に作成する。
+2. リポジトリを作成する際、原則として`Owner` は `smkwlab` のままにしておく。
+こうすると、下川を含む研究室のメンバーがアクセスできるので添削作業などがスムーズになる。
+私的なドキュメントなど、他の人に見られては困るような書類の場合は、自分のアカウント下に作成してもよい。
 3. `Repository name` は `shimokawa-wr` や `shimokawa-sotsuron` など、
 持ち主と内容が分かるものにする。
+自分のアカウント下に作成する場合は自由。
 
 ### 2.2 ローカルリポジトリ
 
@@ -39,7 +39,6 @@ PC上のディスクの残り容量が少ないときには Web サービスで�
 VScode の DevContainer 機能を使ってコンテナを用意する
 
 1. [ローカルリポジトリ](#22-ローカルリポジトリ)でクローンしたリポジトリを `VScode` で開く。
-
    - `GitHub Desktop` で `Open in Visual Studio Code` をクリックするのが簡単。
 2. VScode 上に Dev Container に関するダイアログが表示されるので、`Reopen in Container` をクリック
    - 初回は、Dev Container 機能が LaTeX 用コンテナを設定（ダウンロード）するので、少し時間がかかる。

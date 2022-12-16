@@ -15,6 +15,7 @@ Docker Desktop は Dev Container のバックエンドとなり、自動的に�
     2. ストアアプリ内の検索窓を使って `vscode` を検索
     3. `Visual Studio Code` が見つかるはずなのでインストール
 - Mac 上に環境を構築する場合には `vscode install mac`などで検索し、インストール
+- LaTeX Workshop 拡張はコンテナ上にインストールするので、PC(Mac)へのインストールは不要
 
 ## 2. WSL のインストール
 
@@ -25,12 +26,13 @@ Docker Desktop は Dev Container のバックエンドとなり、自動的に�
     2. `Windows Powershell` メニューを右クリック
     3. `管理者として実行する` をクリック
     4. `このアプリがデバイスに変更を加えることを許可しますか?` というダイアログが表示されたら `はい` を選択
-2. `wsl --install` を実行する
+2. `wsl --install` を実行
 3. `このアプリがデバイスに変更を加えることを許可しますか?` というダイアログが表示されたら `はい` を選択
 4. `要求された操作は正常に終了しました。変更を有効にするには、システムを再起動する必要があります。` というメッセージが表示されるので、PC を再起動
 5. 再起動後 `Installing, this may take a few minutes...` と表示されるので、しばらく待つ
 6. `Enter new UNIX username:` というプロンプトに対しては、`smkwlab.net のアカウント名`を入力
-7. `New password:` に対しては、好きなパスワードを入力。忘れた場合リカバリが困難なので注意
+7. `New password:` に対しては、好きなパスワードを入力
+   - このパスワードを忘れた場合、リカバリが困難なので注意
 8. `Retype new password:` に対しては、7. と同じパスワードを再度入力
 
 ## 3. Docker Desktop のインストール
