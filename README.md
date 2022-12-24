@@ -70,3 +70,4 @@ VScode の DevContainer 機能を使ってコンテナを用意する
 1. `VScode` の `ターミナル` メニューから、`新しいターミナル` をクリック
 2. `VScode` 内で LaTeX コンテナ上の shell が起動する
 3. `./bin/setup-master.sh` を実行
+4. thesis.tex を編集
