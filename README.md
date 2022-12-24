@@ -63,6 +63,7 @@ VScode の DevContainer 機能を使ってコンテナを用意する
 1. `VScode` の `ターミナル` メニューから、`新しいターミナル` をクリック
 2. `VScode` 内で LaTeX コンテナ上の shell が起動する
 3. `./bin/setup-sotsuron.sh` を実行
+4. example-sotsuron.tex を参考に sotsuron.tex を編集
 
 ### 4.3 修士論文用
 
