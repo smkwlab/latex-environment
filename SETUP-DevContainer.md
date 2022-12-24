@@ -31,6 +31,7 @@ Docker Desktop は Dev Container のバックエンドとなり、自動的に�
 1. `New password:` に対しては、好きなパスワードを入力
    - このパスワードを忘れた場合、リカバリが困難なので注意
 1. `Retype new password:` に対しては、6. と同じパスワードを再度入力
+1. Ubunt Linux のプロンプトが表示されたら、`exit` を実行して終了して OK
 
 ## 3. Docker Desktop のインストール
 
