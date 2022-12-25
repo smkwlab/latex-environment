@@ -4,8 +4,8 @@
   },
   "extensions": [
     "james-yu.latex-workshop",
-    "taichi.vscode-textlint"
-//    "tecosaur.latex-utilities"
+    "taichi.vscode-textlint",
+    "GitHub.vscode-pull-request-github",
+    "eamodio.gitlens"
   ]
-//  "postCreateCommand": "yarn install",
 }
