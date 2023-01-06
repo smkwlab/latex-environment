@@ -51,21 +51,27 @@ VScode の DevContainer 機能を使ってコンテナを用意する
 卒業論文や週間報告用のテンプレートファイルを用意する。
 作成したリポジトリの利用目的に応じて、以下の作業を行う。
 
-### 4.1 週間報告用
+### 4.1 週間報告
+
+[週間報告テンプレート](https://github.com/smkwlab/wr-template)のインストール
 
 1. `VScode` の `ターミナル` メニューから、`新しいターミナル` をクリック
 2. `VScode` 内で LaTeX コンテナ上の shell が起動する
 3. `./bin/setup-wr.sh` を実行
 4. 20yy-mm-dd.tex を 2023-05-18.tex など日付のファイルにコピーして、週毎に週報を作成
 
-### 4.2 卒業論文用
+### 4.2 卒業論文
+
+[卒業論文テンプレート](https://github.com/smkwlab/sotsuron-template)のインストール
 
 1. `VScode` の `ターミナル` メニューから、`新しいターミナル` をクリック
 2. `VScode` 内で LaTeX コンテナ上の shell が起動する
 3. `./bin/setup-sotsuron.sh` を実行
 4. example-sotsuron.tex を参考に sotsuron.tex を編集
 
-### 4.3 修士論文用
+### 4.3 修士論文
+
+[修士論文テンプレート](https://github.com/smkwlab/master-template)のインストール
 
 1. `VScode` の `ターミナル` メニューから、`新しいターミナル` をクリック
 2. `VScode` 内で LaTeX コンテナ上の shell が起動する
