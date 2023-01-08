@@ -7,7 +7,7 @@ TEMPLATE_BASE=''https://github.com/smkwlab''
 # - .gitignore に追加する内容を .gitignore-テンプレート名 に記述
 
 # setup スクリプト作成方法
-# ln -s setup-template.sh setup-リポジトリ名.sh
+# ln -s setup-latex.sh setup-リポジトリ名.sh
 
 remote=$(basename ${0} | sed -e 's/^setup-//' -e 's/.sh$//')
 
