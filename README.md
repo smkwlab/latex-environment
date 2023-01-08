@@ -42,9 +42,6 @@ VScode の DevContainer 機能を使ってコンテナを用意する
    - `GitHub Desktop` で `Open in Visual Studio Code` をクリックするのが簡単。
 2. VScode 上に Dev Container に関するダイアログが表示されるので、`Reopen in Container` をクリック
    - 初回は、Dev Container 機能が LaTeX 用コンテナを設定（ダウンロード）するので、少し時間がかかる。
-3. `LaTeX Workshop 拡張をインストールしたほうが良い` 的なダイアログが表示される。
-これは、コンテナ上の VScode に拡張をインストールしますか？という確認。
-問題ないので `Install` (あるいは`インストール`) をクリック。
 
 ## 4. 文章テンプレートの用意
 
