@@ -9,7 +9,7 @@ ifdef WITH_DOCKER
   WORK_DIR=/workspaces$(basename $(CURDIR))/
   DOCKER=docker
   DOCKER_OPT=--rm -v `pwd`:$(WORK_DIR) -w $(WORK_DIR) $(DOCKER_IMAGE) 
-  DOCKER_IMAGE=ghcr.io/smkwlab/latex-docker
+  DOCKER_IMAGE=ghcr.io/smkwlab/latex-image
   DOCKER_RUN=$(DOCKER) run $(DOCKER_OPT)
 .PHONY: sh
 sh:
