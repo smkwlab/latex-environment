@@ -1,3 +1,1 @@
-#! /bin/sh
-
-./setup-template.sh sotsuron
+setup-template.sh

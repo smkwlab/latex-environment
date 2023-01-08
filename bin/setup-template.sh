@@ -6,7 +6,10 @@ TEMPLATE_BASE=''https://github.com/smkwlab''
 # - テンプレート本体：リポジトリの main ブランチに格納
 # - .gitignore に追加する内容を .gitignore-テンプレート名 に記述
 
-remote=${1:-'sotsuron'}
+# setup スクリプト作成方法
+# ln -s setup-template.sh setup-リポジトリ名.sh
+
+remote=$(basename ${0} | sed -e 's/^setup-//' -e 's/.sh$//')
 
 git remote add template ${TEMPLATE_BASE}/${remote}-template.git
 git fetch template

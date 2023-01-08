@@ -1,3 +1,1 @@
-#! /bin/sh
-
-./setup-template.sh wr
+setup-template.sh
