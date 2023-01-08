@@ -11,9 +11,9 @@ TEMPLATE_BASE=''https://github.com/smkwlab''
 
 remote=$(basename ${0} | sed -e 's/^setup-//' -e 's/.sh$//')
 
-git remote add template ${TEMPLATE_BASE}/${remote}-template.git
-git fetch template
-git merge --allow-unrelated-histories -m "merge ${remote} template" template/main
+git remote add ${remote} ${TEMPLATE_BASE}/${remote}-template.git
+git fetch ${remote}
+git merge --allow-unrelated-histories -m "merge ${remote} template" ${remote}/main
 
 cat .gitignore-${remote} >> .gitignore
 rm .gitignore-${remote}
