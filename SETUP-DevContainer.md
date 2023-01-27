@@ -5,12 +5,11 @@
 WSL は `LaTeX 処理系` 用コンテナを実行するために利用する。
 最後に `Docker Desktop` をインストールする。
 Docker Desktop は Dev Container のバックエンドとなり、自動的にコンテナを管理する。
-`LaTeX 処理系`は VScode の DevContainer 機能が自動的にインストールする。
+`LaTeX 処理系`は VScode の devcontainer 機能が自動的にインストールする。
 
 ## 1. VScode のインストール
 
-- 近年の貸与 PC では標準でインストール済
-- 貸与PC以外の Windows マシンにインストールする場合は、`Microsoft Store` を使うのがお勧め
+- Windows マシンにインストールする場合は、`Microsoft Store` を使うのがお勧め
     1. Windows 上で `Microsoft Store` を起動
     2. ストアアプリ内の検索窓を使って `vscode` を検索
     3. `Visual Studio Code` が見つかるはずなのでインストール
@@ -19,7 +18,9 @@ Docker Desktop は Dev Container のバックエンドとなり、自動的に�
 
 ## 2. WSL のインストール
 
-既に WSL インストール済みならば [3. Docker Desktop のインストール](#3-docker-desktop-のインストール)に進む
+Windows 上で利用する場合 WSL が必要である。
+mac および Linux 上で利用する場合、
+および既に WSL インストール済みならば [3. Docker Desktop のインストール](#3-docker-desktop-のインストール)に進む
   
 1. スタートメニューボタンを右クリックし `Windows PowerShell (管理者)(A)`をクリック
     - `このアプリがデバイスに変更を加えることを許可しますか?` というダイアログが表示されたら `はい` を選択
@@ -37,3 +38,5 @@ Docker Desktop は Dev Container のバックエンドとなり、自動的に�
 
 - Windows なら [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/install/)をインストール
 - Mac なら [Docker Desktop for mac](https://docs.docker.com/desktop/install/mac-install/) をインストール
+- Linux なら [公式ドキュメント](https://docs.docker.jp/desktop/install/linux-install.html) に従って作業
+- 

@@ -360,9 +360,3 @@ tags
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
-
-# for markdown preview
-*.html
-
-*-diffHEAD.tex
-
