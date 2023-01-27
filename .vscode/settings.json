@@ -9,15 +9,6 @@
             ],
         },
         {
-            "name": "diff",
-            "command": "/bin/sh",
-            "args": [
-                "%WORKSPACE_FOLDER%/bin/diff.sh",
-                "%WORKSPACE_FOLDER%",
-                "%DOCFILE_EXT%"
-            ],
-        },
-        {
             "name": "textlint",
             "command": "textlint",
             "args": [
@@ -36,12 +27,6 @@
             "name": "lint",
             "tools": [
                 "textlint",
-            ]
-        },
-        {
-            "name": "create_diff",
-            "tools": [
-                "diff",
             ]
         },
     ],
@@ -81,10 +66,6 @@
         "*.bcf",
         //"*.log",
         //"*/*.log"
-    ],
-    "latex-workshop.latexindent.path": "/bin/sh",
-    "latex-workshop.latexindent.args": [
-        "/workdir/bin/linter.sh",
     ],
     "latex-workshop.view.pdf.external.viewer.command": "open",
     "latex-workshop.view.pdf.external.viewer.args": [
