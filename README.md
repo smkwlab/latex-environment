@@ -10,7 +10,6 @@ LaTeX の環境を、VScode + DevContainer により構築する。
 VSCode + DevContainer を利用するために、
 まず [VScode + DevContainer 環境構築](SETUP-DevContainer.md)の手順に従って基礎となる環境を構築する。
 
-
 ## 2. リポジトリの作成
 
 文章ごとに、本リポジトリを元にリポジトリを作成する。
@@ -45,6 +44,17 @@ VScode の DevContainer 機能が LaTeX 環境を自動で構築する
 
 ## 4. LaTeX ファイルの編集
 
-あとは、適宜 .tex ファイルを作成する。
-`VSCode` の `LaTeX Workshop`がインストール済みなので、
-これを活用し編集作業を進める。
+あとは、適宜 .tex ファイルを作成し編集する。
+
+.texファイルを保存すると、自動で `latexmk` が起動し PDF ファイルを生成する。
+この動作が不要な場合には [settings.json](.vscode/settings.json)中の以下の行の `onSave` を `never` などに変更する。
+
+```json
+"latex-workshop.latex.autoBuild.run": "onSave",
+```
+
+SyncTeX も有効なので、.tex ファイルと PDF ファイルの相互ジャンプも可能。
+SyncTeX についてはここでは説明を省略する。
+
+.texファイル保存時には `textlint` も起動し文章をチェックする。
+この結果は `VSCode` の `問題`ウィンドウに表示される。
