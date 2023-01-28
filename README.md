@@ -1,14 +1,14 @@
 # VSCode + devcontainer LaTeX 環境
 
-LaTeX の環境を、VScode + DevContainer により構築する。
+LaTeX の環境を、VSCode + devcontainer により構築する。
 この環境は、LaTeX に加え、textlint も利用可能である。
 
 本環境が用いるコンテナイメージは [latex-image](https://github.com/smkwlab/latex-image) で構築したものである。
 
 ## 1. 基礎環境構築
 
-VSCode + DevContainer を利用するために、
-まず [VScode + DevContainer 環境構築](SETUP-DevContainer.md)の手順に従って基礎となる環境を構築する。
+VSCode + devcontainer を利用するために、
+まず [VSCode + devcontainer 環境構築](.devcontainer/SETUP-devcontainer.md)の手順に従って基礎となる環境を構築する。
 
 ## 2. リポジトリの作成
 
@@ -35,12 +35,12 @@ VSCode + DevContainer を利用するために、
 
 ## 3. LaTeX環境の構築
 
-VScode の DevContainer 機能が LaTeX 環境を自動で構築する
+VSCode の devcontainer 機能が LaTeX 環境を自動で構築する
 
 1. [ローカルリポジトリ](#22-ローカルリポジトリ)でクローンしたリポジトリを `VSCode` で開く。
    - `GitHub Desktop` で `Open in Visual Studio Code` をクリックするのが簡単。
-2. VScode 上に Dev Container に関するダイアログが表示されるので、`Reopen in Container` をクリック
-   - 初回は、Dev Container 機能が LaTeX 用コンテナを設定（ダウンロード）するので、少し時間がかかる。
+2. VSCode 上に devcontainer に関するダイアログが表示されるので、`Reopen in Container` をクリック
+   - 初回は、devcontainer 機能が LaTeX 用コンテナを設定（ダウンロード）するので、少し時間がかかる。
 
 ## 4. LaTeX ファイルの編集
 
