@@ -1,3 +1,3 @@
-FROM ghcr.io/smkwlab/texlive-ja-textlint:latest
+FROM ghcr.io/smkwlab/texlive-ja-textlint:alpine
 
 CMD ["bash"]
