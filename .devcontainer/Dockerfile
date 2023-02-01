@@ -1,3 +1,3 @@
-FROM ghcr.io/smkwlab/latex-image
+FROM ghcr.io/smkwlab/texlive-ja-textlint:latest
 
 CMD ["bash"]
