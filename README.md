@@ -3,7 +3,7 @@
 LaTeX の環境を、VSCode + devcontainer により構築する。
 この環境は、LaTeX に加え、textlint も利用可能である。
 
-本環境が用いるコンテナイメージは [latex-image](https://github.com/smkwlab/latex-image) で構築したものである。
+本環境が用いるコンテナイメージは [texlive-ja-textlint](https://github.com/smkwlab/texlive-ja-textlint) で構築したものである。
 
 ## 1. 基礎環境構築
 
