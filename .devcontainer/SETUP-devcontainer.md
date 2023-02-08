@@ -33,6 +33,16 @@ mac および Linux 上で利用する場合、
    - このパスワードを忘れた場合、リカバリが困難なので注意
 1. `Retype new password:` に対しては、6. と同じパスワードを再度入力
 1. Ubunt Linux のプロンプトが表示されたら、`exit` を実行して終了して OK
+1. WSL のメモリ使用量が気になる場合は、以下の操作でメモリ使用量の上限を 2GB を抑えることができる。なお、本 LaTeX 環境を利用するだけであれば、`memory=2GB` の行を `memory=1GB` にしても大丈夫。
+   1. スタートボタンを右クリックし `Windows Powershell(I)`をクリック
+   2. 以下の内容をコピーし、PowerShell 上に貼り付けて実行
+
+```powershell
+Set-Content -Path $Env:HOMEPATH\.wslconfig -Force -Value @'
+[wsl2]
+memory=2GB
+'@
+```
 
 ## 3. Docker Desktop のインストール
 
