@@ -10,6 +10,8 @@ LaTeX の環境を、VSCode + devcontainer により構築する。
 VSCode + devcontainer を利用するために、
 まず [VSCode + devcontainer 環境構築](.devcontainer/SETUP-devcontainer.md)の手順に従って基礎となる環境を構築する。
 
+`LaTeX 処理系`は VSCode の devcontainer 機能が自動的にインストールする。
+
 ## 2. リポジトリの作成
 
 文章ごとに、本リポジトリを元にリポジトリを作成する。
