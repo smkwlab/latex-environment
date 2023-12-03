@@ -56,7 +56,8 @@ VSCode の devcontainer 機能が LaTeX 環境を自動で構築する
 ```
 
 SyncTeX も有効なので、.tex ファイルと PDF ファイルの相互ジャンプも可能。
-SyncTeX についてはここでは説明を省略する。
+texファイル上で `Ctrl+Alt+j` (`command+option+j`)を押すと、対応する位置に PDF 表示がジャンプする。
+PDF表示上で、`Ctrl`(`command`)を押しながらクリックすると、対応する tex ファイルの行にカーソルがジャンプする。
 
 .texファイル保存時には `textlint` も起動し文章をチェックする。
 この結果は `VSCode` の `問題`ウィンドウに表示される。
