@@ -1,3 +1,3 @@
-FROM --platform=linux/amd64 ghcr.io/smkwlab/texlive-ja-textlint:alpine
+FROM ghcr.io/smkwlab/texlive-ja-textlint:latest
 
 CMD ["bash"]
