@@ -16,7 +16,7 @@ jobs:
     container: ghcr.io/smkwlab/alpine-texlive-ja-textlint:latest
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
