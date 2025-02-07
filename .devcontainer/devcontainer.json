@@ -1,8 +1,6 @@
 {
   "name": "smkwlab",
-  "build": {
-    "dockerfile": "./Dockerfile"
-  },
+  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c-debian",
   "settings": {
     "textlint.nodePath": "/npm/node_modules"
   },
