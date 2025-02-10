@@ -1,0 +1,16 @@
+name: Build and Release PDF
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    uses: ./.github/workflows/build-and-release.yml
+    with:
+# 以下の `document` を tex ファイルのファイル名から '.tex' を除いたものに変更
+      file: document
