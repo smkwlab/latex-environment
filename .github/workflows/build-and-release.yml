@@ -18,7 +18,8 @@ jobs:
       - name: Checkout git repo
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          # pull_request_target の場合は head.sha、tag の場合は GITHUB_REF を使用
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
       - name: Check tex file existence
         id: check_src
@@ -39,7 +40,9 @@ jobs:
         with:
           files: |
             ${{ inputs.file }}.pdf
-          tag_name: ${{ github.head_ref }}-release
+          # pull_request_target の場合は head_ref-release、tag の場合は ref_name-release
+          tag_name: ${{ format('{0}-release', github.head_ref || github.ref_name) }}
           draft: false
-          prerelease: true
+          # タグプッシュの場合は false（正式リリース）、PRの場合は true（プレリリース）
+          prerelease: ${{ github.event_name == 'pull_request_target' }}
           generate_release_notes: true
