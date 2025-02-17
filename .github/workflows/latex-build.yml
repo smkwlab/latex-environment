@@ -10,11 +10,13 @@ permissions:
   contents: write
 
 jobs:
-# 以下の `document` を tex ファイルのファイル名から '.tex' を除いたものに変更
-  document:
+  build-and-release-pdf:
     runs-on: ubuntu-latest
     container: ghcr.io/smkwlab/texlive-ja-textlint:2023c-alpine
     steps:
-      - uses: smkwlab/latex-release-action@v1
+      - uses: smkwlab/latex-release-action@v2
         with:
-          file: ${{ github.job }}
+# 以下の `main` を tex ファイルのファイル名から '.tex' を除いたものに変更
+# `,` で区切って複数ファイル名を指定可能
+# ex: files: main, abstract
+          files: main
