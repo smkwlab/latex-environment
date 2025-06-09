@@ -2,15 +2,7 @@
   "name": "LaTeX Environment for Japanese Academic Documents",
   "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c-debian",
   
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "username": "vscode",
-      "userUid": "1000", 
-      "userGid": "1000"
-    }
-  },
-  
-  "remoteUser": "vscode",
+  "remoteUser": "node",
   
   "customizations": {
     "vscode": {
@@ -54,6 +46,6 @@
   "postCreateCommand": "echo 'LaTeX環境が準備できました！論文執筆を開始してください。'",
   
   "mounts": [
-    "source=${localWorkspaceFolder}/.devcontainer/cache,target=/home/vscode/.cache,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder}/.devcontainer/cache,target=/home/node/.cache,type=bind,consistency=delegated"
   ]
 }
