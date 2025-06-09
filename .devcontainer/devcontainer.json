@@ -1,5 +1,5 @@
 {
-  "name": "LaTeX Environment for Japanese Academic Documents",
+  "name": "LaTeX Environment",
   "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c-debian",
   
   "remoteUser": "node",
@@ -43,9 +43,5 @@
   
   "forwardPorts": [],
   
-  "postCreateCommand": "echo 'LaTeX環境が準備できました！論文執筆を開始してください。'",
-  
-  "mounts": [
-    "source=${localWorkspaceFolder}/.devcontainer/cache,target=/home/node/.cache,type=bind,consistency=delegated"
-  ]
+  "postCreateCommand": "echo 'LaTeX環境が準備できました！論文執筆を開始してください。'"
 }
