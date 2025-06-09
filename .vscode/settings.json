@@ -6,29 +6,29 @@
             "args": [
                 "-outdir=%OUTDIR%",
                 "%DOC%"
-            ],
+            ]
         },
         {
             "name": "textlint",
             "command": "textlint",
             "args": [
                 "%DOC_EXT%"
-            ],
-        },
+            ]
+        }
     ],
     "latex-workshop.latex.recipes": [
         {
             "name": "compile",
             "tools": [
-                "latexmk",
+                "latexmk"
             ]
         },
         {
             "name": "lint",
             "tools": [
-                "textlint",
+                "textlint"
             ]
-        },
+        }
     ],
     "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.latex.watch.delay": 1000,
@@ -60,12 +60,7 @@
         "*.vrb",
         "*.run.xml",
         "*.dvi",
-        "*.fdb_latexmk",
-        "*.fls",
-        "*.toc",
-        "*.bcf",
-        //"*.log",
-        //"*/*.log"
+        "*.bcf"
     ],
     "latex-workshop.view.pdf.external.viewer.command": "open",
     "latex-workshop.view.pdf.external.viewer.args": [
