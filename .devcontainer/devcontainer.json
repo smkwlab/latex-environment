@@ -1,6 +1,6 @@
 {
   "name": "LaTeX Environment for Japanese Academic Documents",
-  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c-debian",
+  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c",
   
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
