@@ -1,12 +1,59 @@
 {
-  "name": "smkwlab",
+  "name": "LaTeX Environment for Japanese Academic Documents",
   "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c-debian",
-  "settings": {
-    "textlint.nodePath": "/npm/node_modules"
+  
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "vscode",
+      "userUid": "1000", 
+      "userGid": "1000"
+    }
   },
-  "extensions": [
-    "james-yu.latex-workshop",
-    "GitHub.vscode-pull-request-github",
-    "taichi.vscode-textlint"
+  
+  "remoteUser": "vscode",
+  
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "textlint.nodePath": "/npm/node_modules",
+        "editor.fontFamily": "'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
+        "editor.fontSize": 14,
+        "editor.lineHeight": 1.6,
+        "editor.wordWrap": "on",
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+        "latex-workshop.latex.autoBuild.run": "onFileChange",
+        "latex-workshop.latex.watch.delay": 1000,
+        "latex-workshop.synctex.afterBuild.enabled": true,
+        "latex-workshop.view.pdf.viewer": "tab",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.fontSize": 13,
+        "git.enableSmartCommit": true,
+        "git.confirmSync": false,
+        "workbench.colorTheme": "Default Light+",
+        "window.zoomLevel": 0
+      },
+      
+      "extensions": [
+        "james-yu.latex-workshop",
+        "GitHub.vscode-pull-request-github", 
+        "3w36zj6.textlint",
+        "tomoki1207.pdf",
+        "streetsidesoftware.code-spell-checker",
+        "mhutchie.git-graph",
+        "MS-CEINTL.vscode-language-pack-ja",
+        "GitHub.copilot",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+  
+  "forwardPorts": [],
+  
+  "postCreateCommand": "echo 'LaTeX環境が準備できました！論文執筆を開始してください。'",
+  
+  "mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer/cache,target=/home/vscode/.cache,type=bind,consistency=cached"
   ]
 }
