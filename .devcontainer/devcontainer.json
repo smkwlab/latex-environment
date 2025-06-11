@@ -1,6 +1,6 @@
 {
   "name": "LaTeX Environment",
-  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2023c-debian",
+  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2025-debian",
   
   "remoteUser": "node",
   
