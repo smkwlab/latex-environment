@@ -23,37 +23,46 @@ jobs:
       - name: Check if this is a texlive update
         id: check
         run: |
-          # Check if the latest commit is a texlive update
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          echo "Commit message: $COMMIT_MSG"
+          # Check if devcontainer.json was updated in the latest commit
+          # This works for both direct commits and merge commits
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          echo "Changed files: $CHANGED_FILES"
           
-          if [[ "$COMMIT_MSG" =~ "Update texlive-ja-textlint to" ]]; then
-            echo "texlive_update=true" >> $GITHUB_OUTPUT
+          if echo "$CHANGED_FILES" | grep -q "\.devcontainer/devcontainer\.json"; then
+            echo "devcontainer.json was updated"
             
-            # Extract version from commit message
-            NEW_VERSION=$(echo "$COMMIT_MSG" | grep -oP 'Update texlive-ja-textlint to \K[^\s]+' | head -1)
-            echo "texlive_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+            # Get the actual texlive version from devcontainer.json
+            NEW_VERSION=$(grep -oP '"image":\s*"ghcr.io/smkwlab/texlive-ja-textlint:\K[^"]+' .devcontainer/devcontainer.json)
+            echo "Current texlive version in devcontainer.json: $NEW_VERSION"
             
-            # Get current latex-environment version from latest tag
-            CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.4.1")
-            echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
-            
-            # Generate new version (increment patch)
-            if [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              MAJOR=${BASH_REMATCH[1]}
-              MINOR=${BASH_REMATCH[2]}
-              PATCH=$((${BASH_REMATCH[3]} + 1))
-              NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+            if [[ -n "$NEW_VERSION" ]]; then
+              echo "texlive_update=true" >> $GITHUB_OUTPUT
+              echo "texlive_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+              
+              # Get current latex-environment version from latest tag
+              CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.4.1")
+              echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
+              
+              # Generate new version (increment patch)
+              if [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+                MAJOR=${BASH_REMATCH[1]}
+                MINOR=${BASH_REMATCH[2]}
+                PATCH=$((${BASH_REMATCH[3]} + 1))
+                NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+              else
+                NEW_TAG="v0.5.0"
+              fi
+              echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+              
+              echo "Detected texlive update: $NEW_VERSION"
+              echo "Will create release: $NEW_TAG"
             else
-              NEW_TAG="v0.5.0"
+              echo "texlive_update=false" >> $GITHUB_OUTPUT
+              echo "No valid texlive version found in devcontainer.json"
             fi
-            echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
-            
-            echo "Detected texlive update: $NEW_VERSION"
-            echo "Will create release: $NEW_TAG"
           else
             echo "texlive_update=false" >> $GITHUB_OUTPUT
-            echo "Not a texlive update commit"
+            echo "devcontainer.json was not updated"
           fi
 
       - name: Update release branch
