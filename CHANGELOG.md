@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Version tracking issues mentioned in #51
 
-## [0.4.1] - 2025-01-15
+## [0.4.1] - 2024-06-01
 
 ### Changed
 - Updated texlive-ja-textlint to 2025a

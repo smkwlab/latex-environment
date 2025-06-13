@@ -76,16 +76,22 @@ jobs:
           git checkout -B release
           
           # Remove management-specific workflows but keep user workflows
-          rm -f .github/workflows/check-texlive-updates.yml
-          rm -f .github/workflows/create-release.yml
+          rm -f .github/workflows/check-texlive-updates.yml || true
+          rm -f .github/workflows/create-release.yml || true
           # Keep: autoassignees.yml, latex-build.yml for template users
           
           # Remove management-specific documentation
-          rm -f DEPENDENCY-UPDATE.md
-          rm -f VERSIONS.md
-          rm -f CHANGELOG.md
-          rm -f CLAUDE.md
+          rm -f DEPENDENCY-UPDATE.md || true
+          rm -f VERSIONS.md || true
+          rm -f CHANGELOG.md || true
+          rm -f CLAUDE.md || true
           # Keep: README.md for template users
+          
+          # Validate version format
+          if [[ ! "${{ steps.check.outputs.new_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version format: ${{ steps.check.outputs.new_tag }}"
+            exit 1
+          fi
           
           # Add version file for tracking
           echo "${{ steps.check.outputs.new_tag }}" > VERSION
