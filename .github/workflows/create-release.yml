@@ -1,0 +1,131 @@
+name: Create Release and Update Dependencies
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.devcontainer/devcontainer.json'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.WORKFLOW_UPDATE_TOKEN || github.token }}
+
+      - name: Check if this is a texlive update
+        id: check
+        run: |
+          # Check if the latest commit is a texlive update
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MSG"
+          
+          if [[ "$COMMIT_MSG" =~ "Update texlive-ja-textlint to" ]]; then
+            echo "texlive_update=true" >> $GITHUB_OUTPUT
+            
+            # Extract version from commit message
+            NEW_VERSION=$(echo "$COMMIT_MSG" | grep -oP 'Update texlive-ja-textlint to \K[^\s]+' | head -1)
+            echo "texlive_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+            
+            # Get current latex-environment version from latest tag
+            CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.4.1")
+            echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
+            
+            # Generate new version (increment patch)
+            if [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              MAJOR=${BASH_REMATCH[1]}
+              MINOR=${BASH_REMATCH[2]}
+              PATCH=$((${BASH_REMATCH[3]} + 1))
+              NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+            else
+              NEW_TAG="v0.5.0"
+            fi
+            echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+            
+            echo "Detected texlive update: $NEW_VERSION"
+            echo "Will create release: $NEW_TAG"
+          else
+            echo "texlive_update=false" >> $GITHUB_OUTPUT
+            echo "Not a texlive update commit"
+          fi
+
+      - name: Update release branch
+        if: steps.check.outputs.texlive_update == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Create or update release branch (without .github directory)
+          git checkout -B release
+          
+          # Remove .github directory from release branch
+          rm -rf .github
+          
+          # Add version file for tracking
+          echo "${{ steps.check.outputs.new_tag }}" > VERSION
+          echo "texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}" >> VERSION
+          echo "created: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> VERSION
+          
+          git add -A
+          git commit -m "Update release branch for texlive-ja-textlint ${{ steps.check.outputs.texlive_version }}
+
+- latex-environment: ${{ steps.check.outputs.new_tag }}
+- texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}
+- Updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" || true
+          
+          # Push release branch
+          git push origin release --force
+
+      - name: Create release tag
+        if: steps.check.outputs.texlive_update == 'true'
+        run: |
+          git checkout main
+          git tag ${{ steps.check.outputs.new_tag }}
+          git push origin ${{ steps.check.outputs.new_tag }}
+
+      - name: Create GitHub release
+        if: steps.check.outputs.texlive_update == 'true'
+        run: |
+          gh release create ${{ steps.check.outputs.new_tag }} \
+            --title "LaTeX Environment ${{ steps.check.outputs.new_tag }}" \
+            --notes "## Changes
+
+- Updated texlive-ja-textlint to \`${{ steps.check.outputs.texlive_version }}\`
+- Updated devcontainer and workflow configurations
+
+## For aldc users
+
+The \`release\` branch contains the clean environment files without CI/CD workflows:
+- Download: \`https://github.com/smkwlab/latex-environment/archive/refs/heads/release.zip\`
+- aldc automatically uses the latest release branch content
+
+## Compatibility
+
+- Compatible with texlive-ja-textlint \`${{ steps.check.outputs.texlive_version }}\`
+- Supports both AMD64 and ARM64 architectures
+
+## Automatic Updates
+
+This release was automatically created by the dependency update system.
+- Original update: [check-texlive-updates workflow](https://github.com/smkwlab/latex-environment/actions/workflows/check-texlive-updates.yml)
+- Release creation: [create-release workflow](https://github.com/smkwlab/latex-environment/actions/workflows/create-release.yml)" \
+            --prerelease=false
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Log completion
+        if: steps.check.outputs.texlive_update == 'true'
+        run: |
+          echo "✅ Release creation completed:"
+          echo "  - Created release: ${{ steps.check.outputs.new_tag }}"
+          echo "  - Updated release branch with texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}"
+          echo "  - aldc will now provide updated environment to new repositories"
+          echo ""
+          echo "🎉 Complete automation chain is now active!"
