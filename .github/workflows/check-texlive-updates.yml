@@ -69,10 +69,10 @@ jobs:
           # Commit the changes
           git add .devcontainer/devcontainer.json .github/workflows/
           git commit -m "Update texlive-ja-textlint to ${{ steps.check.outputs.latest_tag }}
-
-- Update devcontainer.json image reference
-- Update workflow container images
-- Ensure consistency across all configuration files"
+          
+          - Update devcontainer.json image reference
+          - Update workflow container images
+          - Ensure consistency across all configuration files"
 
       - name: Push changes
         if: steps.check.outputs.update_needed == 'true'
