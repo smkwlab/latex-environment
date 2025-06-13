@@ -5,6 +5,11 @@ LaTeX の環境を、VSCode + devcontainer により構築する。
 
 本環境が用いるコンテナイメージは [texlive-ja-textlint](https://github.com/smkwlab/texlive-ja-textlint) で構築したものである。
 
+## 🔄 依存関係の更新
+
+このリポジトリは texlive-ja-textlint Docker イメージの更新を毎日自動的にチェックしています。
+更新プロセスの詳細は [DEPENDENCY-UPDATE.md](DEPENDENCY-UPDATE.md) を参照してください。
+
 ## 1. 基礎環境構築
 
 VSCode + devcontainer を利用するために、

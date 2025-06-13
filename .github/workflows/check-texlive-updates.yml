@@ -1,0 +1,103 @@
+name: Check TeXLive Updates
+
+on:
+  schedule:
+    # Run daily at 9:00 UTC (18:00 JST)
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for new texlive-ja-textlint releases
+        id: check
+        run: |
+          # Get the latest release tag from texlive-ja-textlint
+          LATEST_TAG=$(gh api repos/smkwlab/texlive-ja-textlint/releases/latest --jq '.tag_name' || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "Failed to fetch latest release"
+            exit 1
+          fi
+          
+          echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          
+          # Get current version from devcontainer.json
+          CURRENT_VERSION=$(grep -oP '"image":\s*"ghcr.io/smkwlab/texlive-ja-textlint:\K[^"]+' .devcontainer/devcontainer.json | head -1)
+          echo "Current version in devcontainer.json: $CURRENT_VERSION"
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
+          # Check if update is needed
+          if [ "$LATEST_TAG" != "$CURRENT_VERSION" ]; then
+            echo "Update needed: $CURRENT_VERSION -> $LATEST_TAG"
+            echo "update_needed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No update needed"
+            echo "update_needed=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Create update branch
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          BRANCH_NAME="update-texlive-${{ steps.check.outputs.latest_tag }}"
+          git checkout -b "$BRANCH_NAME"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Update devcontainer.json
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          # Update the image version in devcontainer.json
+          sed -i 's|"image": "ghcr.io/smkwlab/texlive-ja-textlint:[^"]*"|"image": "ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}"|' .devcontainer/devcontainer.json
+          
+          # Commit the changes
+          git add .devcontainer/devcontainer.json
+          git commit -m "Update texlive-ja-textlint to ${{ steps.check.outputs.latest_tag }}"
+
+      - name: Push changes
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          git push origin "${{ env.branch_name }}"
+
+      - name: Create Pull Request
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          gh pr create \
+            --title "Update texlive-ja-textlint to ${{ steps.check.outputs.latest_tag }}" \
+            --body "## Automated Dependency Update
+
+This PR updates the texlive-ja-textlint Docker image from \`${{ steps.check.outputs.current_version }}\` to \`${{ steps.check.outputs.latest_tag }}\`.
+
+### Changes
+- Updated \`.devcontainer/devcontainer.json\` to use the latest texlive-ja-textlint image
+
+### Release Notes
+View the [texlive-ja-textlint release notes](https://github.com/smkwlab/texlive-ja-textlint/releases/tag/${{ steps.check.outputs.latest_tag }}) for details about this update.
+
+### Next Steps
+After merging this PR:
+1. Create a new release tag for latex-environment
+2. Update downstream dependencies:
+   - [ ] aldc script version
+   - [ ] Template repositories
+   - [ ] Documentation
+
+---
+*This PR was automatically created by the dependency update workflow.*" \
+            --base main \
+            --head "${{ env.branch_name }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
