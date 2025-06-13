@@ -74,11 +74,7 @@ jobs:
           echo "created: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> VERSION
           
           git add -A
-          git commit -m "Update release branch for texlive-ja-textlint ${{ steps.check.outputs.texlive_version }}
-
-- latex-environment: ${{ steps.check.outputs.new_tag }}
-- texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}
-- Updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" || true
+          git commit -m "Update release branch for texlive-ja-textlint ${{ steps.check.outputs.texlive_version }}" || true
           
           # Push release branch
           git push origin release --force
@@ -95,27 +91,7 @@ jobs:
         run: |
           gh release create ${{ steps.check.outputs.new_tag }} \
             --title "LaTeX Environment ${{ steps.check.outputs.new_tag }}" \
-            --notes "## Changes
-
-- Updated texlive-ja-textlint to \`${{ steps.check.outputs.texlive_version }}\`
-- Updated devcontainer and workflow configurations
-
-## For aldc users
-
-The \`release\` branch contains the clean environment files without CI/CD workflows:
-- Download: \`https://github.com/smkwlab/latex-environment/archive/refs/heads/release.zip\`
-- aldc automatically uses the latest release branch content
-
-## Compatibility
-
-- Compatible with texlive-ja-textlint \`${{ steps.check.outputs.texlive_version }}\`
-- Supports both AMD64 and ARM64 architectures
-
-## Automatic Updates
-
-This release was automatically created by the dependency update system.
-- Original update: [check-texlive-updates workflow](https://github.com/smkwlab/latex-environment/actions/workflows/check-texlive-updates.yml)
-- Release creation: [create-release workflow](https://github.com/smkwlab/latex-environment/actions/workflows/create-release.yml)" \
+            --notes "Updated texlive-ja-textlint to ${{ steps.check.outputs.texlive_version }}. This release was automatically created by the dependency update system." \
             --prerelease=false
         env:
           GH_TOKEN: ${{ github.token }}
