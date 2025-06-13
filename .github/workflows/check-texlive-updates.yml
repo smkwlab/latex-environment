@@ -74,7 +74,7 @@ jobs:
           sed -i 's|"image": "ghcr.io/smkwlab/texlive-ja-textlint:[^"]*"|"image": "ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}"|' .devcontainer/devcontainer.json
           
           # Update the container image in workflow files
-          find .github/workflows -name "*.yml" -o -name "*.yaml" | xargs sed -i 's|container: ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|container: ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | xargs sed -i 's|container: ghcr.io/smkwlab/texlive-ja-textlint:v2025-test ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
           
           # Commit the changes
           git add .devcontainer/devcontainer.json .github/workflows/
