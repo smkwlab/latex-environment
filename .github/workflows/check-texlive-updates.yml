@@ -1,5 +1,9 @@
 name: Check TeXLive Updates
 
+# This workflow requires a Personal Access Token with 'repo' and 'workflow' scopes
+# to update workflow files. Set it as WORKFLOW_UPDATE_TOKEN secret in repository settings.
+# Without this token, only devcontainer.json will be updated.
+
 on:
   schedule:
     # Run daily at 9:00 UTC (18:00 JST)
@@ -9,7 +13,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  workflows: write
 
 jobs:
   check-updates:
@@ -17,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WORKFLOW_UPDATE_TOKEN || github.token }}
 
       - name: Check for new texlive-ja-textlint releases
         id: check
@@ -76,8 +81,7 @@ jobs:
           git commit -m "Update texlive-ja-textlint to ${{ steps.check.outputs.latest_tag }}
           
           - Update devcontainer.json image reference
-          - Update workflow container images
-          - Ensure consistency across all configuration files"
+          - Update workflow container images for consistency"
 
       - name: Push changes
         if: steps.check.outputs.update_needed == 'true'
@@ -118,4 +122,4 @@ jobs:
             --base main \
             --head "${{ env.branch_name }}"
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_UPDATE_TOKEN || github.token }}
