@@ -1,4 +1,7 @@
 {
+  // latex-environment version: 0.5.0
+  // Compatible with texlive-ja-textlint: 2025b (TeXLive 2025)
+  // See VERSIONS.md for compatibility matrix
   "name": "LaTeX Environment",
   "image": "ghcr.io/smkwlab/texlive-ja-textlint:2025b",
   
