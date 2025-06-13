@@ -20,11 +20,11 @@ jobs:
       - name: Check for new texlive-ja-textlint releases
         id: check
         run: |
-          # Get the latest release tag from texlive-ja-textlint
-          LATEST_TAG=$(gh api repos/smkwlab/texlive-ja-textlint/releases/latest --jq '.tag_name' || echo "")
+          # Get the latest tag from texlive-ja-textlint (they use tags, not releases)
+          LATEST_TAG=$(gh api repos/smkwlab/texlive-ja-textlint/tags --jq '.[0].name' || echo "")
           
           if [ -z "$LATEST_TAG" ]; then
-            echo "Failed to fetch latest release"
+            echo "Failed to fetch latest tag"
             exit 1
           fi
           
@@ -53,7 +53,11 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          BRANCH_NAME="update-texlive-${{ steps.check.outputs.latest_tag }}"
+          # Remove 'v' prefix if present
+          TAG_NAME="${{ steps.check.outputs.latest_tag }}"
+          CLEAN_TAG="${TAG_NAME#v}"
+          
+          BRANCH_NAME="update-texlive-${CLEAN_TAG}"
           git checkout -b "$BRANCH_NAME"
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
 
