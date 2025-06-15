@@ -72,11 +72,26 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Create or update release branch (without .github directory)
+          # Create or update release branch (remove management files, keep user files)
           git checkout -B release
           
-          # Remove .github directory from release branch
-          rm -rf .github
+          # Remove management-specific workflows but keep user workflows
+          rm -f .github/workflows/check-texlive-updates.yml || true
+          rm -f .github/workflows/create-release.yml || true
+          # Keep: autoassignees.yml, latex-build.yml for template users
+          
+          # Remove management-specific documentation
+          rm -f DEPENDENCY-UPDATE.md || true
+          rm -f VERSIONS.md || true
+          rm -f CHANGELOG.md || true
+          rm -f CLAUDE.md || true
+          # Keep: README.md for template users
+          
+          # Validate version format
+          if [[ ! "${{ steps.check.outputs.new_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version format: ${{ steps.check.outputs.new_tag }}"
+            exit 1
+          fi
           
           # Add version file for tracking
           echo "${{ steps.check.outputs.new_tag }}" > VERSION
