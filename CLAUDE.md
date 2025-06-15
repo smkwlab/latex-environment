@@ -244,9 +244,16 @@ Templates (sotsuron-template, wr-template, etc.)
 - Update dependent templates as needed
 - Coordinate with ecosystem maintainers
 
-## Shell Command Gotchas
+## MCP Tools Usage
 
-### Backticks in gh pr create/edit
+### GitHub Operations
+Use MCP tools instead of `gh` command for GitHub operations:
+- **Development**: Use `mcp__gh-toshi__*` tools for development work
+- **Student testing**: Use `mcp__gh-k19__*` tools only when testing student workflows
+
+### Shell Command Gotchas
+
+#### Backticks in gh pr create/edit
 When using `gh pr create` or `gh pr edit` with `--body`, backticks (`) in the body text are interpreted as command substitution by the shell. This causes errors like:
 ```
 permission denied: .devcontainer/devcontainer.json
