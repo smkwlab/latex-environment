@@ -19,8 +19,6 @@
         "files.autoSaveDelay": 1000,
         "latex-workshop.latex.autoBuild.run": "onFileChange",
         "latex-workshop.latex.watch.delay": 1000,
-        "latex-workshop.synctex.afterBuild.enabled": true,
-        "latex-workshop.view.pdf.viewer": "tab",
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.fontSize": 13,
         "git.enableSmartCommit": true,
@@ -31,6 +29,7 @@
       
       "extensions": [
         "james-yu.latex-workshop",
+        "texlab-org.texlab",
         "GitHub.vscode-pull-request-github", 
         "3w36zj6.textlint",
         "tomoki1207.pdf",

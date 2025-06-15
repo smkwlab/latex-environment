@@ -55,7 +55,8 @@ code --install-extension ms-vscode-remote.remote-containers
 The repository uses a Docker-based development container that automatically sets up:
 - **TeXLive 2025** with full Japanese support (platex/uplatex)
 - **textlint** for Japanese academic writing style checking
-- **VSCode extensions**: LaTeX Workshop, GitHub Pull Requests, textlint
+- **TeXLab** for advanced LaTeX language support and real-time syntax checking
+- **VSCode extensions**: LaTeX Workshop, TeXLab, GitHub Pull Requests, textlint
 - **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2025b`
 
 ### Build System
@@ -93,11 +94,14 @@ The repository uses a Docker-based development container that automatically sets
 - `DEPENDENCY-UPDATE.md`: Update procedures for maintainers
 
 ### VSCode Integration
-- Auto-build on save (configurable in settings)
-- SyncTeX keybindings:
+- **Real-time syntax checking** via TeXLab
+- **Intelligent code completion** for LaTeX commands and environments
+- **Auto-build on save** (configurable in settings)
+- **SyncTeX keybindings**:
   - **Ctrl+Alt+J** (Cmd+Option+J on Mac): Jump from .tex to PDF location
   - **Ctrl+Click** (Cmd+Click on Mac): Jump from PDF to .tex source
-- External viewer support (Skim on macOS)
+- **External viewer support** (Skim on macOS)
+- **Diagnostics** for syntax errors, warnings, and style issues
 
 ## Important Conventions
 

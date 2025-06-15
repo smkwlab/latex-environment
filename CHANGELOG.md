@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- TeXLab extension for enhanced LaTeX language support
+- Real-time syntax checking and diagnostics
+- Intelligent code completion for LaTeX commands
+- Advanced symbol navigation and structure outline
+- Configuration for Japanese LaTeX diagnostics filtering
+
+### Changed
+- Updated devcontainer.json to include texlab-org.texlab extension
+- Enhanced .vscode/settings.json with TeXLab configuration
+- Improved development experience with real-time error detection
+
 ## [0.5.0] - 2025-06-13
 
 ### Added

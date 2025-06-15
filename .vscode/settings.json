@@ -68,5 +68,34 @@
         "/Applications/Skim.app",
         "-r",
         "%PDF%"
+    ],
+    
+    // TeXLab configuration for enhanced LaTeX language support
+    "texlab.rootDirectory": ".",
+    "texlab.build.onSave": true,
+    "texlab.build.executable": "latexmk",
+    "texlab.build.args": ["-pdfdvi", "%f"],
+    "texlab.build.forwardSearchAfter": false,
+    
+    // Enhanced diagnostics for Japanese LaTeX
+    "texlab.diagnostics.allowedPatterns": [
+        ".*\\.tex$",
+        ".*\\.sty$"
+    ],
+    "texlab.diagnostics.ignoredPatterns": [
+        "^Underfull.*",
+        "^Overfull.*"
+    ],
+    
+    // Japanese text handling
+    "texlab.completion.enabled": true,
+    "texlab.symbolKinds": [
+        "document",
+        "section",
+        "figure", 
+        "table",
+        "equation",
+        "theorem",
+        "definition"
     ]
 }
