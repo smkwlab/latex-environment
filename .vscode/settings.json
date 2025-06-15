@@ -72,9 +72,9 @@
     
     // TeXLab configuration for enhanced LaTeX language support
     "texlab.rootDirectory": ".",
-    "texlab.build.onSave": true,
+    "texlab.build.onSave": false,
     "texlab.build.executable": "latexmk",
-    "texlab.build.args": ["-pdfdvi", "%f"],
+    "texlab.build.args": ["%f"],
     "texlab.build.forwardSearchAfter": false,
     
     // Enhanced diagnostics for Japanese LaTeX
