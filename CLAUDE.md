@@ -224,18 +224,40 @@ npx textlint --print-config
 ## Ecosystem Integration
 
 ### Related Repositories
-- **texlive-ja-textlint**: Base Docker image
-- **sotsuron-template**: Uses this environment
-- **latex-release-action**: CI/CD integration
-- **aldc**: Deploys this environment
+
+#### Core Infrastructure
+- **texlive-ja-textlint**: Base Docker image with LaTeX + textlint
+- **latex-release-action**: GitHub Action for automated LaTeX compilation
+- **aldc**: Command-line tool for deploying this environment
+
+#### Templates Using This Environment
+- **sotsuron-template**: Unified thesis template (undergraduate/graduate)
+- **ise-report-template**: Information Science Exercise HTML reports with textlint
+- **wr-template**: Weekly report template
+- **latex-template**: Basic LaTeX template
+- **sotsuron-report-template**: Report template for thesis work
+
+#### Supporting Tools
+- **ai-academic-paper-reviewer**: AI-powered academic paper review GitHub Action
+- **thesis-management-tools**: Administrative tools and workflows
 
 ### Dependency Chain
 ```
-texlive-ja-textlint (Docker image)
+texlive-ja-textlint (Docker base)
     ↓
-latex-environment (this repository)
+latex-environment (this repository - DevContainer template)
     ↓
-Templates (sotsuron-template, wr-template, etc.)
+├── sotsuron-template (LaTeX thesis)
+├── ise-report-template (HTML reports with textlint)
+├── wr-template (Weekly reports)
+├── latex-template (Basic LaTeX)
+└── sotsuron-report-template (Thesis reports)
+
+Supporting Infrastructure:
+├── latex-release-action → (Used by LaTeX templates)
+├── ai-academic-paper-reviewer → (Used by thesis repos)
+├── aldc → (Deploys this environment)
+└── thesis-management-tools → (Management workflows)
 ```
 
 ### Version Coordination
