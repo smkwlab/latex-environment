@@ -26,35 +26,47 @@ jobs:
       - name: Check for new texlive-ja-textlint releases
         id: check
         run: |
-          # Get all tags and sort them by commit date to find the actual latest
-          echo "Fetching all tags from texlive-ja-textlint..."
+          # Get the latest tag from texlive-ja-textlint using GitHub API
+          echo "Fetching latest tag from texlive-ja-textlint..."
           
-          # Get tags with commit info and sort by date
-          TAGS_JSON=$(gh api repos/smkwlab/texlive-ja-textlint/tags --paginate --jq '.[] | .name' | head -20)
+          # Get all tags and find the latest semantically
+          TAGS_JSON=$(gh api repos/smkwlab/texlive-ja-textlint/tags --paginate --jq '.[] | select(.name | test("^[0-9]{4}[a-z]*$")) | .name' | head -10)
           
-          # Find the latest tag by checking commit dates
+          # Sort tags by semantic versioning logic (year first, then letter suffix)
           LATEST_TAG=""
-          LATEST_DATE=""
-          
           for tag in $TAGS_JSON; do
-            # Get the commit SHA for this tag
-            SHA=$(gh api repos/smkwlab/texlive-ja-textlint/git/refs/tags/$tag --jq '.object.sha' 2>/dev/null || echo "")
-            if [ -z "$SHA" ]; then
-              continue
-            fi
+            echo "Checking tag: $tag"
             
-            # Get the commit date
-            COMMIT_DATE=$(gh api repos/smkwlab/texlive-ja-textlint/commits/$SHA --jq '.commit.committer.date' 2>/dev/null || echo "")
-            if [ -z "$COMMIT_DATE" ]; then
-              continue
-            fi
+            # Extract year and suffix (e.g., 2025c -> year=2025, suffix=c)
+            YEAR=$(echo "$tag" | grep -oE '^[0-9]{4}')
+            SUFFIX=$(echo "$tag" | grep -oE '[a-z]*$')
             
-            echo "Tag $tag: $COMMIT_DATE"
-            
-            # Compare dates (ISO 8601 format can be compared as strings)
-            if [ -z "$LATEST_DATE" ] || [ "$COMMIT_DATE" \> "$LATEST_DATE" ]; then
-              LATEST_DATE="$COMMIT_DATE"
+            if [ -z "$LATEST_TAG" ]; then
               LATEST_TAG="$tag"
+              continue
+            fi
+            
+            # Compare with current latest
+            LATEST_YEAR=$(echo "$LATEST_TAG" | grep -oE '^[0-9]{4}')
+            LATEST_SUFFIX=$(echo "$LATEST_TAG" | grep -oE '[a-z]*$')
+            
+            # Compare year first
+            if [ "$YEAR" -gt "$LATEST_YEAR" ]; then
+              LATEST_TAG="$tag"
+            elif [ "$YEAR" -eq "$LATEST_YEAR" ]; then
+              # Same year, compare suffix (later alphabet = newer)
+              if [ -z "$SUFFIX" ] && [ ! -z "$LATEST_SUFFIX" ]; then
+                # Current tag has no suffix, latest has suffix -> latest is newer
+                continue
+              elif [ ! -z "$SUFFIX" ] && [ -z "$LATEST_SUFFIX" ]; then
+                # Current tag has suffix, latest has no suffix -> current is newer
+                LATEST_TAG="$tag"
+              elif [ ! -z "$SUFFIX" ] && [ ! -z "$LATEST_SUFFIX" ]; then
+                # Both have suffix, compare alphabetically
+                if [ "$SUFFIX" \> "$LATEST_SUFFIX" ]; then
+                  LATEST_TAG="$tag"
+                fi
+              fi
             fi
           done
           
@@ -63,7 +75,7 @@ jobs:
             exit 1
           fi
           
-          echo "Latest texlive-ja-textlint tag: $LATEST_TAG (committed on $LATEST_DATE)"
+          echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
           
           # Get current version from devcontainer.json
@@ -119,7 +131,7 @@ jobs:
           sed -i 's|"image": "ghcr.io/smkwlab/texlive-ja-textlint:[^"]*"|"image": "ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}"|' .devcontainer/devcontainer.json
           
           # Update the container image in workflow files
-          find .github/workflows -name "*.yml" -o -name "*.yaml" | xargs sed -i 's|container: ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|container: ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | xargs sed -i 's|container: ghcr.io/smkwlab/texlive-ja-textlint:2025c ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
           
           # Commit the changes
           git add .devcontainer/devcontainer.json .github/workflows/
