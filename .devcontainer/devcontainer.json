@@ -3,7 +3,7 @@
   // Compatible with texlive-ja-textlint: 2025b (TeXLive 2025)
   // See VERSIONS.md for compatibility matrix
   "name": "LaTeX Environment",
-  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2025b",
+  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2025c",
   
   "remoteUser": "node",
   
