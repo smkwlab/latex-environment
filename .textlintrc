@@ -1,22 +1,17 @@
 {
-    "plugins": [
-        "latex2e"
-    ],
-    "filters": {
-        "comments": true,
-        "allowlist": {
-            "allow": [
-                "/%[\\s\\S]*?$/m"
-            ]
-        }
-    },
     "rules": {
         "preset-ja-technical-writing": {
             "max-kanji-continuous-len": {
                 "max": 8,
                 "allow": [
                     "九州産業大学理工学部",
+                    "九州産業大学理工学部情報科学科",
+                    "九州産業大学理工学部情報科学科下川研究室",
                     "九州産業大学理工学部卒業論文",
+                    "九州産業大学大学院",
+                    "九州産業大学大学院情報科学研究科",
+                    "九州産業大学大学院情報科学研究科博士前期課程",
+                    "九州産業大学大学院情報科学研究科下川研究室",
                     "九州産業大学情報科学部",
                     "九州産業大学情報科学部卒業論文",
                     "福岡女子大学国際文理学部"
@@ -25,7 +20,9 @@
             "no-invalid-control-character": true,
             "no-unmatched-pair": true,
             "sentence-length": {
-                "max": 100
+                "max": 100,
+                "skipUrlStringLink": true,
+                "skipEmailLink": true
             },
             "no-nfd": true,
             "no-doubled-joshi": {
@@ -64,6 +61,60 @@
                 "preferInList": "である",
                 "strict": true
             }
+        },
+        "terminology": {
+            "defaultTerms": false,
+            "terms": [
+                "JavaScript",
+                "HTML",
+                "CSS",
+                "GitHub",
+                "LaTeX",
+                "VS Code"
+            ]
         }
-    }
+    },
+    "overrides": [
+        {
+            "files": ["*.html"],
+            "plugins": ["html"],
+            "filters": {
+                "comments": true,
+                "allowlist": {
+                    "allow": [
+                        "/<!--[\\s\\S]*?-->/m",
+                        "/<p class=\"author\"[\\s\\S]*?<\\/p>/",
+                        "/<div class=\"learning-progress\"[\\s\\S]*?<\\/div>/",
+                        "/<code[\\s\\S]*?<\\/code>/",
+                        "/<pre[\\s\\S]*?<\\/pre>/"
+                    ]
+                }
+            }
+        },
+        {
+            "files": ["*.md", "*.markdown"],
+            "filters": {
+                "allowlist": {
+                    "allow": [
+                        "/```[\\s\\S]*?```/m",
+                        "/`[^`]+`/g",
+                        "/\\[[^\\]]+\\]\\([^)]+\\)/g",
+                        "/!\\[[^\\]]*\\]\\([^)]+\\)/g"
+                    ]
+                }
+            }
+        },
+        {
+            "files": ["*.tex", "*.latex"],
+            "plugins": ["latex2e"],
+            "filters": {
+                "comments": true,
+                "allowlist": {
+                    "allow": [
+                        "/%[\\s\\S]*?$/m"
+                    ]
+                }
+            }
+        }
+    ]
 }
