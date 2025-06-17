@@ -6,7 +6,9 @@ This document tracks the compatibility between latex-environment releases and te
 
 | latex-environment | texlive-ja-textlint | TeXLive Year | Notes |
 |------------------|---------------------|--------------|-------|
-| v0.5.0 (current) | 2025b              | 2025         | Latest stable release |
+| v0.5.2 (current) | 2025e              | 2025         | Updated textlint configuration with terminology rule |
+| v0.5.1           | 2025e              | 2025         | Initial 2025e compatibility |
+| v0.5.0           | 2025b              | 2025         | Latest stable release |
 | v0.4.1           | 2025a              | 2025         | Initial TeXLive 2025 support |
 | v0.4.0           | 2023c              | 2023         | Last TeXLive 2023 version |
 | v0.3.4           | 2023b              | 2023         | Stability improvements |
@@ -26,6 +28,15 @@ Starting from v0.5.0, latex-environment follows semantic versioning:
 - **PATCH (0.0.x)**: Bug fixes, documentation updates, minor configuration changes
 
 ## Migration Notes
+
+### v0.5.1 → v0.5.2
+- Enhanced textlint configuration with terminology rule support
+- Cleaned up max-kanji-continuous-len allowlist
+- Added unified textlint configuration for ecosystem consistency
+
+### v0.5.0 → v0.5.1
+- Updated to texlive-ja-textlint:2025e
+- Initial 2025e compatibility
 
 ### v0.4.x → v0.5.0
 - Introduced version tracking system
