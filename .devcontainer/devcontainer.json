@@ -11,7 +11,7 @@
     "vscode": {
       "settings": {
         "textlint.nodePath": "/npm/node_modules",
-        "editor.fontFamily": "'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
+        "editor.fontFamily": "'BIZ UDPGothic', Meiryo, 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
         "editor.fontSize": 14,
         "editor.lineHeight": 1.6,
         "editor.wordWrap": "on",
@@ -21,6 +21,7 @@
         "latex-workshop.latex.watch.delay": 1000,
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.fontSize": 13,
+        "terminal.integrated.fontFamily": "HackGen, 'SF Mono', 'BIZ UDGothic', Consolas, 'Courier New', monospace",
         "git.enableSmartCommit": true,
         "git.confirmSync": false,
         "workbench.colorTheme": "Default Light+",
