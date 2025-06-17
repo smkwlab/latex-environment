@@ -6,8 +6,8 @@ name: Check TeXLive Updates
 
 on:
   schedule:
-    # Run daily at 1:00 UTC (10:00 JST)
-    - cron: '0 1 * * *'
+    # Run daily at 23:00 UTC (8:00 JST)
+    - cron: '0 23 * * *'
   workflow_dispatch:
 
 permissions:
