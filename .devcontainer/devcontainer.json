@@ -11,7 +11,7 @@
     "vscode": {
       "settings": {
         "textlint.nodePath": "/npm/node_modules",
-        "editor.fontFamily": "'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
+        "editor.fontFamily": "'BIZ UDPGothic', Meiryo, 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
         "editor.fontSize": 14,
         "editor.lineHeight": 1.6,
         "editor.wordWrap": "on",
