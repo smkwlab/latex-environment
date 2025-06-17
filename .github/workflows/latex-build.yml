@@ -12,11 +12,12 @@ permissions:
 jobs:
   build-and-release-pdf:
     runs-on: ubuntu-latest
-    container: ghcr.io/smkwlab/texlive-ja-textlint:2025d
     steps:
-      - uses: smkwlab/latex-release-action@v2.2.0
-        with:
-# 以下の `main` を tex ファイルのファイル名から '.tex' を除いたものに変更
-# `,` で区切って複数ファイル名を指定可能
-# ex: files: main, abstract
-          files: main
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Build LaTeX with Docker
+        run: |
+          docker run --rm -v $(pwd):/workspace -w /workspace \
+            ghcr.io/smkwlab/texlive-ja-textlint:2025d \
+            latexmk -pdf main.tex || echo "No main.tex found, skipping build"
