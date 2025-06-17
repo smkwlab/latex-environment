@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/smkwlab/texlive-ja-textlint:2025d
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - uses: smkwlab/latex-release-action@v2.2.0
         with:
 # 以下の `main` を tex ファイルのファイル名から '.tex' を除いたものに変更
