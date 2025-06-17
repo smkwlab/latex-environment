@@ -21,7 +21,7 @@
         "latex-workshop.latex.watch.delay": 1000,
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.fontSize": 13,
-        "terminal.integrated.fontFamily": "SF Mono, Consolas, 'Courier New', monospace",
+        "terminal.integrated.fontFamily": "HackGen, 'SF Mono', 'BIZ UDGothic', Consolas, 'Courier New', monospace",
         "git.enableSmartCommit": true,
         "git.confirmSync": false,
         "workbench.colorTheme": "Default Light+",
