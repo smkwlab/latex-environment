@@ -5,11 +5,6 @@ LaTeX の環境を、VSCode + devcontainer により構築する。
 
 本環境が用いるコンテナイメージは [texlive-ja-textlint](https://github.com/smkwlab/texlive-ja-textlint) で構築したものである。
 
-## 🔄 依存関係の更新
-
-このリポジトリは texlive-ja-textlint Docker イメージの更新を毎日自動的にチェックしています。
-更新プロセスの詳細は [DEPENDENCY-UPDATE.md](DEPENDENCY-UPDATE.md) を参照してください。
-
 ## 1. 基礎環境構築
 
 VSCode + devcontainer を利用するために、
@@ -24,25 +19,25 @@ VSCode + devcontainer を利用するために、
 したがって、文章ごとにコンテナを作成することになる。
 ただし、コンテナイメージは build 済みのものを利用することと、
 すべての devcontainer で共通のコンテナイメージを使うため、
-コンテナ構築時間やディスク容量的な負荷は大きくはない。
+コンテナ構築時間やディスク容量的な負荷は大きくない。
 
 ### 2.1 リモートリポジトリ
 
 以下の手順で GitHub 上にリポジトリを作成する。
 
 1. [このリポジトリ](https://github.com/smkwlab/latex-environment)の
-`Use this template` ボタンを押して `Create a new repository` を選択
+`Use this template` ボタンを押して `Create a new repository` を選択。
 
 ### 2.2 ローカルリポジトリ
 
 [リモートリポジトリ](#21-リモートリポジトリ)で作成したリポジトリを、自分の PC にクローンする。
 
-- `GitHub` 上で `Code` をクリックし　`Open with GitHub Desktop` をクリック
-- もちろん、他の方法でクローンしても良い
+- `GitHub` 上で `Code` をクリックし　`Open with GitHub Desktop` をクリック。
+- もちろん、他の方法でクローンしても良い。
 
 ## 3. LaTeX環境の構築
 
-VSCode の devcontainer 機能が LaTeX 環境を自動で構築する
+VSCode の devcontainer 機能が LaTeX 環境を自動で構築する。
 
 1. [ローカルリポジトリ](#22-ローカルリポジトリ)でクローンしたリポジトリを `VSCode` で開く。
    - `GitHub Desktop` で `Open in Visual Studio Code` をクリックするのが簡単。
