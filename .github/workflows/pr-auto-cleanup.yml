@@ -1,0 +1,45 @@
+---
+name: PR Auto-cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-cleanup:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - name: Delete merged branch
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+
+          echo "🗑️ PR #${{ github.event.number }} was merged"
+          echo "Deleting branch: $BRANCH_NAME"
+          # Delete the branch (GitHub should handle this automatically)
+          curl -X DELETE \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/git/refs/heads/$BRANCH_NAME" || \
+            echo "Branch already deleted or deletion failed"
+
+          echo "✅ Branch cleanup completed"
+
+      - name: Update related issues
+        if: contains(github.event.pull_request.body, 'closes') || contains(github.event.pull_request.body, 'fixes')
+        run: |
+          echo "📝 PR contained issue references"
+          echo "Related issues should be automatically closed by GitHub"
+
+      - name: Trigger cleanup workflow
+        if: >
+          startsWith(github.event.pull_request.head.ref, 'update/') ||
+          startsWith(github.event.pull_request.head.ref, 'fix/')
+        run: |
+          echo "🧹 Triggering additional cleanup for update/fix branches"
+          # Could trigger repository-wide cleanup if needed

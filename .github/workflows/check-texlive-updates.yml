@@ -107,23 +107,21 @@ jobs:
           TAG_NAME="${{ steps.check.outputs.latest_tag }}"
           CLEAN_TAG="${TAG_NAME#v}"
 
-          # Create a unique branch name with timestamp to avoid conflicts
-          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          BRANCH_NAME="update-texlive-${CLEAN_TAG}-${TIMESTAMP}"
+          # Use version-based branch name (no timestamp to prevent duplicates)
+          BRANCH_NAME="update-texlive-${CLEAN_TAG}"
 
-          # Check if a similar branch already exists
-          EXISTING_BRANCH=$(git ls-remote --heads origin "update-texlive-${CLEAN_TAG}*" | head -1)
-          if [ ! -z "$EXISTING_BRANCH" ]; then
-            echo "Similar update branch already exists. Checking for existing PRs..."
-            # Check if there's already an open PR for this version
-            EXISTING_PR=$(gh pr list --state open \
-              --search "Update texlive-ja-textlint to ${TAG_NAME}" \
-              --json number --jq '.[0].number' || echo "")
-            if [ ! -z "$EXISTING_PR" ]; then
-              echo "PR #$EXISTING_PR already exists for this update. Skipping."
-              echo "update_needed=false" >> $GITHUB_OUTPUT
-              exit 0
-            fi
+          # Check if branch or PR already exists for this version
+          EXISTING_BRANCH=$(git ls-remote --heads origin "$BRANCH_NAME" | head -1)
+          EXISTING_PR=$(gh pr list --state open \
+            --search "Update texlive-ja-textlint to ${TAG_NAME}" \
+            --json number --jq '.[0].number' || echo "")
+          if [ ! -z "$EXISTING_BRANCH" ] || [ ! -z "$EXISTING_PR" ]; then
+            echo "Update already in progress:"
+            [ ! -z "$EXISTING_BRANCH" ] && echo "  - Branch exists: $BRANCH_NAME"
+            [ ! -z "$EXISTING_PR" ] && echo "  - PR exists: #$EXISTING_PR"
+            echo "Skipping duplicate update."
+            echo "update_needed=false" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
           git checkout -b "$BRANCH_NAME"
