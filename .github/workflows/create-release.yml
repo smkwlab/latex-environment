@@ -33,9 +33,33 @@ jobs:
           if echo "$CHANGED_FILES" | grep -q "\.devcontainer/devcontainer\.json"; then
             echo "devcontainer.json was updated"
 
-            # Get the actual texlive version from devcontainer.json
-            NEW_VERSION=$(grep -oP '"image":\s*"ghcr.io/smkwlab/texlive-ja-textlint:\K[^"]+' \
-              .devcontainer/devcontainer.json)
+            # Validate devcontainer.json format first
+            if [ ! -f ".devcontainer/devcontainer.json" ]; then
+              echo "Error: devcontainer.json not found"
+              exit 1
+            fi
+            
+            if ! jq empty .devcontainer/devcontainer.json 2>/dev/null; then
+              echo "Error: Invalid JSON format in devcontainer.json"
+              exit 1
+            fi
+
+            # Get the actual texlive version using secure parsing
+            NEW_VERSION=$(jq -r '.image // empty' .devcontainer/devcontainer.json | \
+              sed -n 's/.*texlive-ja-textlint://p')
+            
+            # Validate extracted version
+            if [ -z "$NEW_VERSION" ]; then
+              echo "Error: Could not extract texlive version from devcontainer.json"
+              exit 1
+            fi
+            
+            # Validate version format
+            if [[ ! "$NEW_VERSION" =~ ^[0-9]{4}[a-z]*$ ]]; then
+              echo "Error: Invalid texlive version format: $NEW_VERSION"
+              exit 1
+            fi
+            
             echo "Current texlive version in devcontainer.json: $NEW_VERSION"
 
             if [[ -n "$NEW_VERSION" ]]; then
@@ -46,13 +70,23 @@ jobs:
               CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.4.1")
               echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
 
-              # Generate new version (increment patch)
+              # Generate new version (increment patch) with validation
               if [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
                 MAJOR=${BASH_REMATCH[1]}
                 MINOR=${BASH_REMATCH[2]}
                 PATCH=$((${BASH_REMATCH[3]} + 1))
+                
+                # Validate version components
+                if [ "$MAJOR" -lt 0 ] || [ "$MAJOR" -gt 999 ] || \
+                   [ "$MINOR" -lt 0 ] || [ "$MINOR" -gt 999 ] || \
+                   [ "$PATCH" -lt 0 ] || [ "$PATCH" -gt 9999 ]; then
+                  echo "Error: Invalid version component detected"
+                  exit 1
+                fi
+                
                 NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
               else
+                echo "Warning: Could not parse current tag '$CURRENT_TAG', using default"
                 NEW_TAG="v0.5.0"
               fi
               echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
@@ -96,16 +130,35 @@ jobs:
           rm -f .textlintrc-test || true
           # Keep: .textlintrc for template users
 
-          # Validate version format
-          if [[ ! "${{ steps.check.outputs.new_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid version format: ${{ steps.check.outputs.new_tag }}"
+          # Enhanced version format validation
+          NEW_TAG="${{ steps.check.outputs.new_tag }}"
+          if [[ ! "$NEW_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Invalid version format: $NEW_TAG"
+            exit 1
+          fi
+          
+          # Additional length validation
+          if [ ${#NEW_TAG} -gt 20 ]; then
+            echo "Error: Version tag too long: $NEW_TAG"
             exit 1
           fi
 
-          # Add version file for tracking
-          echo "${{ steps.check.outputs.new_tag }}" > VERSION
-          echo "texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}" >> VERSION
-          echo "created: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> VERSION
+          # Add version file for tracking with secure handling
+          TEMP_VERSION=$(mktemp)
+          trap 'rm -f "$TEMP_VERSION"' EXIT
+          
+          # Create VERSION file content securely
+          echo "${{ steps.check.outputs.new_tag }}" > "$TEMP_VERSION"
+          echo "texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}" >> "$TEMP_VERSION"
+          echo "created: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> "$TEMP_VERSION"
+          
+          # Validate content before moving
+          if [ -s "$TEMP_VERSION" ]; then
+            mv "$TEMP_VERSION" VERSION
+          else
+            echo "Error: Failed to create VERSION file"
+            exit 1
+          fi
 
           git add -A
           git commit -m \
