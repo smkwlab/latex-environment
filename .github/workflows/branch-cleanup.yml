@@ -1,0 +1,103 @@
+---
+name: Automatic Branch Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+  schedule:
+    # Daily cleanup at 02:00 UTC (11:00 JST)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup-merged-branches:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.merged == true ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clean up merged feature branches
+        run: |
+          echo "🧹 Starting automatic branch cleanup..."
+
+          # Get all remote branches except protected ones
+          PROTECTED_BRANCHES="main|release|HEAD"
+
+          # Find branches that have been merged into main
+          git remote prune origin
+
+          MERGED_BRANCHES=$(git branch -r --merged origin/main | \
+            grep -v "origin/main" | \
+            grep -v "origin/HEAD" | \
+            grep -v "origin/release" | \
+            sed 's/origin\///' | \
+            grep -E "(^update-texlive-.*|^fix-.*|^add-.*|^remove-.*)" | \
+            head -10)
+
+          if [ -z "$MERGED_BRANCHES" ]; then
+            echo "✅ No merged branches found for cleanup"
+            exit 0
+          fi
+
+          echo "🗑️ Found merged branches to delete:"
+          echo "$MERGED_BRANCHES"
+
+          # Delete merged branches (limit to 10 per run for safety)
+          echo "$MERGED_BRANCHES" | while read -r branch; do
+            if [ ! -z "$branch" ]; then
+              echo "Deleting branch: $branch"
+              git push origin --delete "$branch" || \
+                echo "Failed to delete $branch (may not exist)"
+            fi
+          done
+
+          echo "✅ Branch cleanup completed"
+
+      - name: Clean up stale update branches
+        run: |
+          echo "🧹 Cleaning up stale update branches..."
+
+          # Find update branches older than 7 days
+          CUTOFF=$(date -d '7 days ago' +%s)
+          STALE_BRANCHES=$(git for-each-ref \
+            --format='%(refname:short) %(committerdate:unix)' \
+            refs/remotes/origin/update-* | \
+            awk -v cutoff=$CUTOFF '$2 < cutoff {print $1}' | \
+            sed 's/origin\///' | \
+            head -5)
+
+          if [ -z "$STALE_BRANCHES" ]; then
+            echo "✅ No stale update branches found"
+            exit 0
+          fi
+
+          echo "🗑️ Found stale update branches:"
+          echo "$STALE_BRANCHES"
+
+          # Delete stale branches
+          echo "$STALE_BRANCHES" | while read -r branch; do
+            if [ ! -z "$branch" ]; then
+              echo "Deleting stale branch: $branch"
+              git push origin --delete "$branch" || echo "Failed to delete $branch"
+            fi
+          done
+
+          echo "✅ Stale branch cleanup completed"
+
+      - name: Report cleanup summary
+        run: |
+          REMAINING_BRANCHES=$(git branch -r | grep -v "origin/main\|origin/HEAD\|origin/release" | wc -l)
+          echo "📊 Cleanup Summary:"
+          echo "  - Remaining feature branches: $REMAINING_BRANCHES"
+          echo "  - Protected branches: main, release"
+          echo "  - Next cleanup: Daily at 02:00 UTC"
