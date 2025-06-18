@@ -322,3 +322,53 @@ git status                    # thesis-environment ecosystem status
 - Test in multiple environments
 - Verify ecosystem integration
 - Check automated workflow functionality
+
+## Security and Permission Guidelines
+
+### 🚨 CRITICAL: GitHub Administration Rules
+
+#### Git and GitHub Operations
+- **NEVER use `--admin` flag** with `gh pr merge` or similar commands
+- **NEVER bypass Branch Protection Rules** without explicit user permission
+- **ALWAYS respect the configured workflow**: approval process, status checks, etc.
+
+#### When Branch Protection Blocks Operations
+1. **Report the situation** to user with specific error message
+2. **Explain available options**:
+   - Wait for required approvals
+   - Wait for status checks to pass
+   - Use `--auto` flag for automatic merge after requirements met
+   - Request explicit permission for admin override (emergency only)
+3. **Wait for user instruction** - never assume intent
+
+#### Proper Error Handling Example
+```bash
+# When this fails:
+gh pr merge 90 --squash --delete-branch
+# Error: Pull request is not mergeable: the base branch policy prohibits the merge
+
+# CORRECT response:
+echo "Branch Protection Rules prevent merge. Options:"
+echo "1. Wait for required approvals (currently need: 1)"
+echo "2. Wait for status checks (currently pending: build-and-release-pdf)"
+echo "3. Use --auto to merge automatically when requirements met"
+echo "4. Request admin override (emergency only)"
+echo "Please specify how to proceed."
+
+# WRONG response:
+gh pr merge 90 --squash --delete-branch --admin  # NEVER DO THIS
+```
+
+#### Emergency Admin Override
+- Only use `--admin` flag when explicitly requested by user
+- Document the reason for override in commit/PR description
+- Report the action taken and why it was necessary
+
+### Rationale
+Branch Protection Rules exist to:
+- Ensure code quality through required reviews
+- Prevent accidental breaking changes
+- Maintain audit trail of changes
+- Enforce consistent development workflow
+
+Bypassing these rules undermines repository security and development process integrity.
