@@ -24,24 +24,75 @@ jobs:
         with:
           token: ${{ secrets.WORKFLOW_UPDATE_TOKEN || github.token }}
 
+      - name: Check API rate limit
+        run: |
+          echo "Checking GitHub API rate limit..."
+          REMAINING=$(gh api rate_limit --jq '.rate.remaining')
+          RESET_TIME=$(gh api rate_limit --jq '.rate.reset')
+          echo "API calls remaining: $REMAINING"
+
+          if [ "$REMAINING" -lt 50 ]; then
+            echo "Warning: GitHub API rate limit is low (remaining: $REMAINING)"
+            echo "Rate limit resets at: $(date -d @$RESET_TIME)"
+            if [ "$REMAINING" -lt 10 ]; then
+              echo "Error: GitHub API rate limit nearly exceeded. Exiting to prevent failures."
+              exit 1
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Check for new texlive-ja-textlint releases
         id: check
         run: |
           # Get the latest tag from texlive-ja-textlint using GitHub API
           echo "Fetching latest tag from texlive-ja-textlint..."
 
-          # Get all tags and find the latest semantically
-          TAGS_JSON=$(gh api repos/smkwlab/texlive-ja-textlint/tags --paginate \
-            --jq '.[] | select(.name | test("^[0-9]{4}[a-z]*$")) | .name' | head -10)
+          # Get all tags and find the latest semantically with input validation
+          echo "Fetching tags from GitHub API..."
+          TAGS_RESPONSE=$(gh api repos/smkwlab/texlive-ja-textlint/tags --paginate)
+
+          # Validate API response
+          if ! echo "$TAGS_RESPONSE" | jq empty 2>/dev/null; then
+            echo "Error: Invalid JSON response from GitHub API"
+            exit 1
+          fi
+
+          # Extract and validate tags
+          TAGS_JSON=$(echo "$TAGS_RESPONSE" | jq -r '.[] | select(.name | test("^[0-9]{4}[a-z]*$")) | .name' | head -10)
+
+          # Validate that we got some tags
+          if [ -z "$TAGS_JSON" ]; then
+            echo "Error: No valid tags found in API response"
+            exit 1
+          fi
 
           # Sort tags by semantic versioning logic (year first, then letter suffix)
           LATEST_TAG=""
           for tag in $TAGS_JSON; do
             echo "Checking tag: $tag"
 
+            # Enhanced input validation for tag format
+            if [[ ! "$tag" =~ ^[0-9]{4}[a-z]*$ ]]; then
+              echo "Warning: Invalid tag format detected, skipping: $tag" >&2
+              continue
+            fi
+
+            # Validate tag length (prevent excessively long input)
+            if [ ${#tag} -gt 10 ]; then
+              echo "Warning: Tag too long, skipping: $tag" >&2
+              continue
+            fi
+
             # Extract year and suffix (e.g., 2025c -> year=2025, suffix=c)
             YEAR=$(echo "$tag" | grep -oE '^[0-9]{4}')
             SUFFIX=$(echo "$tag" | grep -oE '[a-z]*$')
+
+            # Validate extracted components
+            if [ -z "$YEAR" ] || [ ${#YEAR} -ne 4 ]; then
+              echo "Warning: Invalid year in tag, skipping: $tag" >&2
+              continue
+            fi
 
             if [ -z "$LATEST_TAG" ]; then
               LATEST_TAG="$tag"
@@ -57,13 +108,13 @@ jobs:
               LATEST_TAG="$tag"
             elif [ "$YEAR" -eq "$LATEST_YEAR" ]; then
               # Same year, compare suffix (later alphabet = newer)
-              if [ -z "$SUFFIX" ] && [ ! -z "$LATEST_SUFFIX" ]; then
+              if [ -z "$SUFFIX" ] && [ -n "$LATEST_SUFFIX" ]; then
                 # Current tag has no suffix, latest has suffix -> latest is newer
                 continue
-              elif [ ! -z "$SUFFIX" ] && [ -z "$LATEST_SUFFIX" ]; then
+              elif [ -n "$SUFFIX" ] && [ -z "$LATEST_SUFFIX" ]; then
                 # Current tag has suffix, latest has no suffix -> current is newer
                 LATEST_TAG="$tag"
-              elif [ ! -z "$SUFFIX" ] && [ ! -z "$LATEST_SUFFIX" ]; then
+              elif [ -n "$SUFFIX" ] && [ -n "$LATEST_SUFFIX" ]; then
                 # Both have suffix, compare alphabetically
                 if [ "$SUFFIX" \> "$LATEST_SUFFIX" ]; then
                   LATEST_TAG="$tag"
@@ -80,9 +131,34 @@ jobs:
           echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
-          # Get current version from devcontainer.json
-          CURRENT_VERSION=$(grep -oP '"image":\s*"ghcr.io/smkwlab/texlive-ja-textlint:\K[^"]+' \
-            .devcontainer/devcontainer.json | head -1)
+          # Get current version from devcontainer.json using secure parsing
+          if [ ! -f ".devcontainer/devcontainer.json" ]; then
+            echo "Error: devcontainer.json not found"
+            exit 1
+          fi
+
+          # Validate JSON format first
+          if ! jq empty .devcontainer/devcontainer.json 2>/dev/null; then
+            echo "Error: Invalid JSON format in devcontainer.json"
+            exit 1
+          fi
+
+          # Extract version using jq for safer parsing
+          CURRENT_VERSION=$(jq -r '.image // empty' .devcontainer/devcontainer.json | \
+            sed -n 's/.*texlive-ja-textlint://p' | head -1)
+
+          # Validate extracted version
+          if [ -z "$CURRENT_VERSION" ]; then
+            echo "Error: Could not extract current version from devcontainer.json"
+            exit 1
+          fi
+
+          # Validate version format
+          if [[ ! "$CURRENT_VERSION" =~ ^[0-9]{4}[a-z]*$ ]]; then
+            echo "Error: Invalid current version format: $CURRENT_VERSION"
+            exit 1
+          fi
+
           echo "Current version in devcontainer.json: $CURRENT_VERSION"
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
@@ -110,15 +186,29 @@ jobs:
           # Use version-based branch name (no timestamp to prevent duplicates)
           BRANCH_NAME="update-texlive-${CLEAN_TAG}"
 
-          # Check if branch or PR already exists for this version
+          # Check if branch or PR already exists for this version with enhanced validation
           EXISTING_BRANCH=$(git ls-remote --heads origin "$BRANCH_NAME" | head -1)
-          EXISTING_PR=$(gh pr list --state open \
+
+          # Secure PR search with error handling
+          EXISTING_PR=""
+          if PR_SEARCH_RESULT=$(gh pr list --state open \
             --search "Update texlive-ja-textlint to ${TAG_NAME}" \
-            --json number --jq '.[0].number' || echo "")
-          if [ ! -z "$EXISTING_BRANCH" ] || [ ! -z "$EXISTING_PR" ]; then
+            --json number 2>/dev/null); then
+
+            # Validate PR search response
+            if echo "$PR_SEARCH_RESULT" | jq empty 2>/dev/null; then
+              EXISTING_PR=$(echo "$PR_SEARCH_RESULT" | jq -r '.[0].number // empty')
+            else
+              echo "Warning: Invalid JSON response from PR search, continuing..."
+            fi
+          else
+            echo "Warning: PR search failed, continuing with branch check only"
+          fi
+
+          if [ -n "$EXISTING_BRANCH" ] || [ -n "$EXISTING_PR" ]; then
             echo "Update already in progress:"
-            [ ! -z "$EXISTING_BRANCH" ] && echo "  - Branch exists: $BRANCH_NAME"
-            [ ! -z "$EXISTING_PR" ] && echo "  - PR exists: #$EXISTING_PR"
+            [ -n "$EXISTING_BRANCH" ] && echo "  - Branch exists: $BRANCH_NAME"
+            [ -n "$EXISTING_PR" ] && echo "  - PR exists: #$EXISTING_PR"
             echo "Skipping duplicate update."
             echo "update_needed=false" >> $GITHUB_OUTPUT
             exit 0
@@ -136,8 +226,8 @@ jobs:
             .devcontainer/devcontainer.json
 
           # Update the container image in workflow files (now using docker run instead of container mode)
-          find .github/workflows -name "*.yml" -o -name "*.yaml" | \
-            xargs sed -i 's|ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|\
+          find .github/workflows -name "*.yml" -o -name "*.yaml" -print0 | \
+            xargs -0 sed -i 's|ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|\
             ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
 
           # Commit the changes
