@@ -38,7 +38,7 @@ jobs:
               echo "Error: devcontainer.json not found"
               exit 1
             fi
-            
+
             if ! jq empty .devcontainer/devcontainer.json 2>/dev/null; then
               echo "Error: Invalid JSON format in devcontainer.json"
               exit 1
@@ -47,19 +47,19 @@ jobs:
             # Get the actual texlive version using secure parsing
             NEW_VERSION=$(jq -r '.image // empty' .devcontainer/devcontainer.json | \
               sed -n 's/.*texlive-ja-textlint://p')
-            
+
             # Validate extracted version
             if [ -z "$NEW_VERSION" ]; then
               echo "Error: Could not extract texlive version from devcontainer.json"
               exit 1
             fi
-            
+
             # Validate version format
             if [[ ! "$NEW_VERSION" =~ ^[0-9]{4}[a-z]*$ ]]; then
               echo "Error: Invalid texlive version format: $NEW_VERSION"
               exit 1
             fi
-            
+
             echo "Current texlive version in devcontainer.json: $NEW_VERSION"
 
             if [[ -n "$NEW_VERSION" ]]; then
@@ -74,8 +74,8 @@ jobs:
               if [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
                 MAJOR=${BASH_REMATCH[1]}
                 MINOR=${BASH_REMATCH[2]}
-                PATCH=$((${BASH_REMATCH[3]} + 1))
-                
+                PATCH=$((BASH_REMATCH[3] + 1))
+
                 # Validate version components
                 if [ "$MAJOR" -lt 0 ] || [ "$MAJOR" -gt 999 ] || \
                    [ "$MINOR" -lt 0 ] || [ "$MINOR" -gt 999 ] || \
@@ -83,7 +83,7 @@ jobs:
                   echo "Error: Invalid version component detected"
                   exit 1
                 fi
-                
+
                 NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
               else
                 echo "Warning: Could not parse current tag '$CURRENT_TAG', using default"
@@ -136,7 +136,7 @@ jobs:
             echo "Error: Invalid version format: $NEW_TAG"
             exit 1
           fi
-          
+
           # Additional length validation
           if [ ${#NEW_TAG} -gt 20 ]; then
             echo "Error: Version tag too long: $NEW_TAG"
@@ -146,12 +146,12 @@ jobs:
           # Add version file for tracking with secure handling
           TEMP_VERSION=$(mktemp)
           trap 'rm -f "$TEMP_VERSION"' EXIT
-          
+
           # Create VERSION file content securely
           echo "${{ steps.check.outputs.new_tag }}" > "$TEMP_VERSION"
           echo "texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}" >> "$TEMP_VERSION"
           echo "created: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> "$TEMP_VERSION"
-          
+
           # Validate content before moving
           if [ -s "$TEMP_VERSION" ]; then
             mv "$TEMP_VERSION" VERSION
