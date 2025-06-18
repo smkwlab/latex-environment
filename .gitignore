@@ -360,3 +360,6 @@ tags
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+# Claude Code local settings
+.claude/settings.local.json
