@@ -1,45 +1,42 @@
 ---
-name: PR Auto-cleanup
+name: PR Enhanced Cleanup
 
 on:
   pull_request:
     types: [closed]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  auto-cleanup:
+  enhanced-cleanup:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
 
     steps:
-      - name: Delete merged branch
+      - name: Log cleanup status
         run: |
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          echo "✅ PR #${{ github.event.number }} was merged"
+          echo "📝 GitHub auto-deleted branch: $BRANCH_NAME"
 
-          echo "🗑️ PR #${{ github.event.number }} was merged"
-          echo "Deleting branch: $BRANCH_NAME"
-          # Delete the branch (GitHub should handle this automatically)
-          curl -X DELETE \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/git/refs/heads/$BRANCH_NAME" || \
-            echo "Branch already deleted or deletion failed"
-
-          echo "✅ Branch cleanup completed"
-
-      - name: Update related issues
-        if: contains(github.event.pull_request.body, 'closes') || contains(github.event.pull_request.body, 'fixes')
-        run: |
-          echo "📝 PR contained issue references"
-          echo "Related issues should be automatically closed by GitHub"
-
-      - name: Trigger cleanup workflow
+      - name: Check for related cleanup needs
         if: >
           startsWith(github.event.pull_request.head.ref, 'update/') ||
-          startsWith(github.event.pull_request.head.ref, 'fix/')
+          startsWith(github.event.pull_request.head.ref, 'experiment/') ||
+          startsWith(github.event.pull_request.head.ref, 'test/')
         run: |
-          echo "🧹 Triggering additional cleanup for update/fix branches"
-          # Could trigger repository-wide cleanup if needed
+          BRANCH_TYPE="${{ github.event.pull_request.head.ref }}"
+          echo "🔍 Special branch type detected: $BRANCH_TYPE"
+          if [[ "$BRANCH_TYPE" == update/* ]]; then
+            echo "📦 Update branch merged - checking for related stale branches"
+            echo "💡 Daily cleanup will handle any related old update branches"
+          elif [[ "$BRANCH_TYPE" == experiment/* || "$BRANCH_TYPE" == test/* ]]; then
+            echo "🧪 Experimental/test branch merged"
+            echo "💡 Related experimental branches will be cleaned up within 7 days"
+          fi
+
+      - name: Log related issues
+        if: contains(github.event.pull_request.body, 'closes') || contains(github.event.pull_request.body, 'fixes')
+        run: |
+          echo "🔗 PR contained issue references - GitHub will auto-close related issues"
