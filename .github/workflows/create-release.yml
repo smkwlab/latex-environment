@@ -132,11 +132,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Log completion
+      - name: Summary
         if: steps.check.outputs.texlive_update == 'true'
         run: |
-          echo "✅ Release creation completed:"
-          echo "  - Created release: ${{ steps.check.outputs.new_tag }}"
+          echo "🎉 Successfully created latex-environment release ${{ steps.check.outputs.new_tag }}"
+          echo ""
+          echo "Summary:"
           echo "  - Updated release branch with texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}"
           echo "  - aldc will now provide updated environment to new repositories"
           echo ""

@@ -27,11 +27,11 @@
         "workbench.colorTheme": "Default Light+",
         "window.zoomLevel": 0
       },
-      
+
       "extensions": [
         "james-yu.latex-workshop",
         "texlab-org.texlab",
-        "GitHub.vscode-pull-request-github", 
+        "GitHub.vscode-pull-request-github",
         "3w36zj6.textlint",
         "tomoki1207.pdf",
         "streetsidesoftware.code-spell-checker",
@@ -43,8 +43,8 @@
       ]
     }
   },
-  
+
   "forwardPorts": [],
-  
+
   "postCreateCommand": "echo 'LaTeX環境が準備できました！論文執筆を開始してください。'"
 }
