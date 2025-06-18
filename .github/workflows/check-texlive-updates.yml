@@ -1,3 +1,4 @@
+---
 name: Check TeXLive Updates
 
 # This workflow requires a Personal Access Token with 'repo' and 'workflow' scopes
@@ -28,28 +29,29 @@ jobs:
         run: |
           # Get the latest tag from texlive-ja-textlint using GitHub API
           echo "Fetching latest tag from texlive-ja-textlint..."
-          
+
           # Get all tags and find the latest semantically
-          TAGS_JSON=$(gh api repos/smkwlab/texlive-ja-textlint/tags --paginate --jq '.[] | select(.name | test("^[0-9]{4}[a-z]*$")) | .name' | head -10)
-          
+          TAGS_JSON=$(gh api repos/smkwlab/texlive-ja-textlint/tags --paginate \
+            --jq '.[] | select(.name | test("^[0-9]{4}[a-z]*$")) | .name' | head -10)
+
           # Sort tags by semantic versioning logic (year first, then letter suffix)
           LATEST_TAG=""
           for tag in $TAGS_JSON; do
             echo "Checking tag: $tag"
-            
+
             # Extract year and suffix (e.g., 2025c -> year=2025, suffix=c)
             YEAR=$(echo "$tag" | grep -oE '^[0-9]{4}')
             SUFFIX=$(echo "$tag" | grep -oE '[a-z]*$')
-            
+
             if [ -z "$LATEST_TAG" ]; then
               LATEST_TAG="$tag"
               continue
             fi
-            
+
             # Compare with current latest
             LATEST_YEAR=$(echo "$LATEST_TAG" | grep -oE '^[0-9]{4}')
             LATEST_SUFFIX=$(echo "$LATEST_TAG" | grep -oE '[a-z]*$')
-            
+
             # Compare year first
             if [ "$YEAR" -gt "$LATEST_YEAR" ]; then
               LATEST_TAG="$tag"
@@ -69,20 +71,21 @@ jobs:
               fi
             fi
           done
-          
+
           if [ -z "$LATEST_TAG" ]; then
             echo "Failed to determine latest tag"
             exit 1
           fi
-          
+
           echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          
+
           # Get current version from devcontainer.json
-          CURRENT_VERSION=$(grep -oP '"image":\s*"ghcr.io/smkwlab/texlive-ja-textlint:\K[^"]+' .devcontainer/devcontainer.json | head -1)
+          CURRENT_VERSION=$(grep -oP '"image":\s*"ghcr.io/smkwlab/texlive-ja-textlint:\K[^"]+' \
+            .devcontainer/devcontainer.json | head -1)
           echo "Current version in devcontainer.json: $CURRENT_VERSION"
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-          
+
           # Check if update is needed
           if [ "$LATEST_TAG" != "$CURRENT_VERSION" ]; then
             echo "Update needed: $CURRENT_VERSION -> $LATEST_TAG"
@@ -99,28 +102,30 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
+
           # Remove 'v' prefix if present
           TAG_NAME="${{ steps.check.outputs.latest_tag }}"
           CLEAN_TAG="${TAG_NAME#v}"
-          
+
           # Create a unique branch name with timestamp to avoid conflicts
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
           BRANCH_NAME="update-texlive-${CLEAN_TAG}-${TIMESTAMP}"
-          
+
           # Check if a similar branch already exists
           EXISTING_BRANCH=$(git ls-remote --heads origin "update-texlive-${CLEAN_TAG}*" | head -1)
           if [ ! -z "$EXISTING_BRANCH" ]; then
             echo "Similar update branch already exists. Checking for existing PRs..."
             # Check if there's already an open PR for this version
-            EXISTING_PR=$(gh pr list --state open --search "Update texlive-ja-textlint to ${TAG_NAME}" --json number --jq '.[0].number' || echo "")
+            EXISTING_PR=$(gh pr list --state open \
+              --search "Update texlive-ja-textlint to ${TAG_NAME}" \
+              --json number --jq '.[0].number' || echo "")
             if [ ! -z "$EXISTING_PR" ]; then
               echo "PR #$EXISTING_PR already exists for this update. Skipping."
               echo "update_needed=false" >> $GITHUB_OUTPUT
               exit 0
             fi
           fi
-          
+
           git checkout -b "$BRANCH_NAME"
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
 
@@ -128,15 +133,19 @@ jobs:
         if: steps.check.outputs.update_needed == 'true'
         run: |
           # Update the image version in devcontainer.json
-          sed -i 's|"image": "ghcr.io/smkwlab/texlive-ja-textlint:[^"]*"|"image": "ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}"|' .devcontainer/devcontainer.json
-          
+          sed -i 's|"image": "ghcr.io/smkwlab/texlive-ja-textlint:[^"]*"|\
+            "image": "ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}"|' \
+            .devcontainer/devcontainer.json
+
           # Update the container image in workflow files (now using docker run instead of container mode)
-          find .github/workflows -name "*.yml" -o -name "*.yaml" | xargs sed -i 's|ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
-          
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | \
+            xargs sed -i 's|ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|\
+            ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
+
           # Commit the changes
           git add .devcontainer/devcontainer.json .github/workflows/
           git commit -m "Update texlive-ja-textlint to ${{ steps.check.outputs.latest_tag }}
-          
+
           - Update devcontainer.json image reference
           - Update workflow container images for consistency"
 
@@ -151,16 +160,18 @@ jobs:
         run: |
           PR_BODY=$(cat <<'EOF'
           ## Automated Dependency Update
-          
-          This PR updates the texlive-ja-textlint Docker image from `${{ steps.check.outputs.current_version }}` to `${{ steps.check.outputs.latest_tag }}`.
-          
+
+          This PR updates the texlive-ja-textlint Docker image from
+          \`${{ steps.check.outputs.current_version }}\` to \`${{ steps.check.outputs.latest_tag }}\`.
+
           ### Changes
           - Updated `.devcontainer/devcontainer.json` to use the latest texlive-ja-textlint image
           - Updated GitHub Actions workflow container images for consistency
-          
+
           ### Release Notes
-          View the [texlive-ja-textlint release notes](https://github.com/smkwlab/texlive-ja-textlint/releases/tag/${{ steps.check.outputs.latest_tag }}) for details about this update.
-          
+          View [release notes](https://github.com/smkwlab/texlive-ja-textlint/releases/tag/
+          ${{ steps.check.outputs.latest_tag }}) for details.
+
           ### Next Steps
           After merging this PR:
           1. Create a new release tag for latex-environment
@@ -168,12 +179,12 @@ jobs:
              - [ ] aldc script version
              - [ ] Template repositories
              - [ ] Documentation
-          
+
           ---
           *This PR was automatically created by the dependency update workflow.*
           EOF
           )
-          
+
           gh pr create \
             --title "Update texlive-ja-textlint to ${{ steps.check.outputs.latest_tag }}" \
             --body "$PR_BODY" \
