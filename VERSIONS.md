@@ -6,7 +6,9 @@ This document tracks the compatibility between latex-environment releases and te
 
 | latex-environment | texlive-ja-textlint | TeXLive Year | Notes |
 |------------------|---------------------|--------------|-------|
-| v0.5.2 (current) | 2025e              | 2025         | Updated textlint configuration with terminology rule |
+| v0.5.4 (current) | 2025e              | 2025         | Automated update via GitHub Actions |
+| v0.5.3           | 2025e              | 2025         | Automated update via GitHub Actions |
+| v0.5.2           | 2025e              | 2025         | Updated textlint configuration with terminology rule |
 | v0.5.1           | 2025e              | 2025         | Initial 2025e compatibility |
 | v0.5.0           | 2025b              | 2025         | Latest stable release |
 | v0.4.1           | 2025a              | 2025         | Initial TeXLive 2025 support |
