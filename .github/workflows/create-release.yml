@@ -172,8 +172,9 @@ jobs:
         run: |
           git checkout main
           
-          # Update VERSION file on main branch
-          echo "${{ steps.check.outputs.new_tag }}" > VERSION
+          # Update VERSION file on main branch (without 'v' prefix to maintain consistency)
+          # Tags use 'v' prefix, but VERSION file traditionally doesn't
+          echo "${{ steps.check.outputs.new_tag }}" | sed 's/^v//' > VERSION
           
           # Update VERSIONS.md with new compatibility entry
           TEMP_VERSIONS=$(mktemp)
@@ -182,19 +183,38 @@ jobs:
           # Read current VERSIONS.md and insert new entry
           if [ -f "VERSIONS.md" ]; then
             # Create updated VERSIONS.md with new entry at top of version table
+            # More robust approach that doesn't depend on line numbers
             awk -v new_version="${{ steps.check.outputs.new_tag }}" \
                 -v texlive_version="${{ steps.check.outputs.texlive_version }}" '
-            BEGIN { inserted = 0 }
-            /^\|.*\|.*\|.*\|.*\|$/ {
-              if (inserted == 0 && NR > 8) {
+            BEGIN { 
+              inserted = 0
+              header_found = 0
+              in_table = 0
+            }
+            # Detect table header
+            /^\| *latex-environment *\|/ { 
+              header_found = 1
+              print
+              next
+            }
+            # Detect header separator and start of table content
+            header_found && /^\|[-: ]+\|/ {
+              in_table = 1
+              print
+              next
+            }
+            # Insert new version at the beginning of table content
+            in_table && /^\|/ {
+              if (!inserted) {
                 print "| " new_version " (current) | " texlive_version " | 2025 | Automated update via GitHub Actions |"
                 inserted = 1
               }
-              # Update previous current entry
+              # Remove (current) marker from previous entries
               gsub(/\(current\)/, "")
               print
               next
             }
+            # Print all other lines as-is
             { print }
             ' VERSIONS.md > "$TEMP_VERSIONS"
             
@@ -282,12 +302,16 @@ jobs:
           RELEASE_TAG="${{ steps.check.outputs.new_tag }}"
           echo "Created release tag: $RELEASE_TAG"
           
-          # Verify synchronization
-          if [ "$MAIN_VERSION" = "$RELEASE_TAG" ]; then
+          # Verify synchronization (VERSION file doesn't have 'v' prefix)
+          EXPECTED_VERSION=$(echo "$RELEASE_TAG" | sed 's/^v//')
+          if [ "$MAIN_VERSION" = "$EXPECTED_VERSION" ]; then
             echo "✅ Version files are synchronized"
+            echo "  VERSION file: $MAIN_VERSION"
+            echo "  Release tag: $RELEASE_TAG"
           else
             echo "❌ Version synchronization failed!"
             echo "  VERSION file: $MAIN_VERSION"
+            echo "  Expected: $EXPECTED_VERSION"
             echo "  Release tag: $RELEASE_TAG"
             exit 1
           fi
