@@ -167,23 +167,161 @@ jobs:
           # Push release branch
           git push origin release --force
 
-      - name: Create release tag
+      - name: Update main branch version files
         if: steps.check.outputs.texlive_update == 'true'
         run: |
           git checkout main
+          
+          # Update VERSION file on main branch (without 'v' prefix to maintain consistency)
+          # Tags use 'v' prefix, but VERSION file traditionally doesn't
+          echo "${{ steps.check.outputs.new_tag }}" | sed 's/^v//' > VERSION
+          
+          # Update VERSIONS.md with new compatibility entry
+          TEMP_VERSIONS=$(mktemp)
+          trap 'rm -f "$TEMP_VERSIONS"' EXIT
+          
+          # Read current VERSIONS.md and insert new entry
+          if [ -f "VERSIONS.md" ]; then
+            # Create updated VERSIONS.md with new entry at top of version table
+            # More robust approach that doesn't depend on line numbers
+            awk -v new_version="${{ steps.check.outputs.new_tag }}" \
+                -v texlive_version="${{ steps.check.outputs.texlive_version }}" '
+            BEGIN { 
+              inserted = 0
+              header_found = 0
+              in_table = 0
+            }
+            # Detect table header
+            /^\| *latex-environment *\|/ { 
+              header_found = 1
+              print
+              next
+            }
+            # Detect header separator and start of table content
+            header_found && /^\|[-: ]+\|/ {
+              in_table = 1
+              print
+              next
+            }
+            # Insert new version at the beginning of table content
+            in_table && /^\|/ {
+              if (!inserted) {
+                print "| " new_version " (current) | " texlive_version " | 2025 | Automated update via GitHub Actions |"
+                inserted = 1
+              }
+              # Remove (current) marker from previous entries
+              gsub(/\(current\)/, "")
+              print
+              next
+            }
+            # Print all other lines as-is
+            { print }
+            ' VERSIONS.md > "$TEMP_VERSIONS"
+            
+            # Validate and update VERSIONS.md
+            if [ -s "$TEMP_VERSIONS" ]; then
+              mv "$TEMP_VERSIONS" VERSIONS.md
+              echo "Updated VERSIONS.md with ${{ steps.check.outputs.new_tag }} entry"
+            else
+              echo "Warning: Failed to update VERSIONS.md, using original"
+            fi
+          else
+            echo "Warning: VERSIONS.md not found, skipping update"
+          fi
+          
+          # Commit version file updates to main branch
+          git add VERSION VERSIONS.md
+          git commit -m "Auto-update version files for ${{ steps.check.outputs.new_tag }}
+
+          - Update VERSION to ${{ steps.check.outputs.new_tag }}
+          - Update VERSIONS.md compatibility matrix
+          - Add texlive-ja-textlint:${{ steps.check.outputs.texlive_version }} mapping
+
+          Automated by create-release workflow" || true
+          
+          # Push main branch updates
+          git push origin main
+
+      - name: Create release tag
+        if: steps.check.outputs.texlive_update == 'true'
+        run: |
           git tag ${{ steps.check.outputs.new_tag }}
           git push origin ${{ steps.check.outputs.new_tag }}
 
       - name: Create GitHub release
         if: steps.check.outputs.texlive_update == 'true'
         run: |
+          # Generate comprehensive release notes
+          RELEASE_NOTES=$(cat <<EOF
+          ## 🚀 LaTeX Environment ${{ steps.check.outputs.new_tag }}
+          
+          **Automated Release** - Updated texlive-ja-textlint dependency
+          
+          ### 📦 Changes
+          - **texlive-ja-textlint**: Updated to \`${{ steps.check.outputs.texlive_version }}\`
+          - **VERSION file**: Synchronized to \`${{ steps.check.outputs.new_tag }}\`
+          - **VERSIONS.md**: Updated compatibility matrix
+          
+          ### 🔄 Automated Updates
+          - ✅ Release branch updated for template users
+          - ✅ VERSION files synchronized across branches
+          - ✅ Compatibility matrix updated
+          - ✅ aldc integration ready
+          
+          ### 📚 Usage
+          
+          **For new repositories (recommended):**
+          - Use [aldc](https://github.com/smkwlab/aldc) for automated setup
+          - Or use GitHub template from this release
+          
+          **For existing repositories:**
+          - Update \`.devcontainer/devcontainer.json\` image to \`ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.texlive_version }}\`
+          
+          ---
+          *This release was automatically created by the dependency update system.*
+          EOF
+          )
+          
           gh release create ${{ steps.check.outputs.new_tag }} \
             --title "LaTeX Environment ${{ steps.check.outputs.new_tag }}" \
-            --notes "Updated texlive-ja-textlint to ${{ steps.check.outputs.texlive_version }}. \
-              This release was automatically created by the dependency update system." \
+            --notes "$RELEASE_NOTES" \
             --prerelease=false
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Verify version synchronization
+        if: steps.check.outputs.texlive_update == 'true'
+        run: |
+          echo "🔍 Verifying version file synchronization..."
+          
+          # Check VERSION file on main branch
+          MAIN_VERSION=$(cat VERSION)
+          echo "VERSION file on main: $MAIN_VERSION"
+          
+          # Check release tag
+          RELEASE_TAG="${{ steps.check.outputs.new_tag }}"
+          echo "Created release tag: $RELEASE_TAG"
+          
+          # Verify synchronization (VERSION file doesn't have 'v' prefix)
+          EXPECTED_VERSION=$(echo "$RELEASE_TAG" | sed 's/^v//')
+          if [ "$MAIN_VERSION" = "$EXPECTED_VERSION" ]; then
+            echo "✅ Version files are synchronized"
+            echo "  VERSION file: $MAIN_VERSION"
+            echo "  Release tag: $RELEASE_TAG"
+          else
+            echo "❌ Version synchronization failed!"
+            echo "  VERSION file: $MAIN_VERSION"
+            echo "  Expected: $EXPECTED_VERSION"
+            echo "  Release tag: $RELEASE_TAG"
+            exit 1
+          fi
+          
+          # Check VERSIONS.md update
+          if grep -q "$RELEASE_TAG" VERSIONS.md; then
+            echo "✅ VERSIONS.md updated successfully"
+          else
+            echo "⚠️ VERSIONS.md may not have been updated properly"
+          fi
 
       - name: Summary
         if: steps.check.outputs.texlive_update == 'true'
@@ -191,7 +329,11 @@ jobs:
           echo "🎉 Successfully created latex-environment release ${{ steps.check.outputs.new_tag }}"
           echo ""
           echo "Summary:"
-          echo "  - Updated release branch with texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}"
-          echo "  - aldc will now provide updated environment to new repositories"
+          echo "  ✅ Updated release branch with texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}"
+          echo "  ✅ Updated VERSION file on main branch: ${{ steps.check.outputs.new_tag }}"
+          echo "  ✅ Updated VERSIONS.md compatibility matrix"
+          echo "  ✅ Created release tag and GitHub release"
+          echo "  ✅ Version files synchronized across branches"
           echo ""
-          echo "🎉 Complete automation chain is now active!"
+          echo "📦 aldc will now provide updated environment to new repositories"
+          echo "🎉 Complete automation chain with version synchronization is now active!"
