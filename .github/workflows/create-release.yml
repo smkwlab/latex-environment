@@ -121,6 +121,7 @@ jobs:
           rm -f VERSIONS.md || true
           rm -f CHANGELOG.md || true
           rm -f CLAUDE.md || true
+          rm -rf docs/ || true
           # Keep: README.md for template users
 
           # Remove test files and development artifacts
