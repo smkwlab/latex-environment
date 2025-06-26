@@ -68,7 +68,11 @@ jobs:
           fi
 
           # Sort tags by semantic versioning logic (year first, then letter suffix)
+          # Tags without suffix are oldest (e.g., 2025 < 2025b < 2025c < 2025d < 2025e)
           LATEST_TAG=""
+          LATEST_YEAR=""
+          LATEST_SUFFIX=""
+          
           for tag in $TAGS_JSON; do
             echo "Checking tag: $tag"
 
@@ -96,30 +100,33 @@ jobs:
 
             if [ -z "$LATEST_TAG" ]; then
               LATEST_TAG="$tag"
+              LATEST_YEAR="$YEAR"
+              LATEST_SUFFIX="$SUFFIX"
               continue
             fi
-
-            # Compare with current latest
-            LATEST_YEAR=$(echo "$LATEST_TAG" | grep -oE '^[0-9]{4}')
-            LATEST_SUFFIX=$(echo "$LATEST_TAG" | grep -oE '[a-z]*$')
 
             # Compare year first
             if [ "$YEAR" -gt "$LATEST_YEAR" ]; then
               LATEST_TAG="$tag"
+              LATEST_YEAR="$YEAR"
+              LATEST_SUFFIX="$SUFFIX"
             elif [ "$YEAR" -eq "$LATEST_YEAR" ]; then
-              # Same year, compare suffix (later alphabet = newer)
-              if [ -z "$SUFFIX" ] && [ -n "$LATEST_SUFFIX" ]; then
-                # Current tag has no suffix, latest has suffix -> latest is newer
-                continue
-              elif [ -n "$SUFFIX" ] && [ -z "$LATEST_SUFFIX" ]; then
-                # Current tag has suffix, latest has no suffix -> current is newer
+              # Same year, compare suffix (no suffix is oldest)
+              if [ -z "$LATEST_SUFFIX" ] && [ -n "$SUFFIX" ]; then
+                # Latest has no suffix, current has suffix -> current is newer
                 LATEST_TAG="$tag"
-              elif [ -n "$SUFFIX" ] && [ -n "$LATEST_SUFFIX" ]; then
+                LATEST_YEAR="$YEAR"
+                LATEST_SUFFIX="$SUFFIX"
+              elif [ -n "$LATEST_SUFFIX" ] && [ -n "$SUFFIX" ]; then
                 # Both have suffix, compare alphabetically
-                if [ "$SUFFIX" \> "$LATEST_SUFFIX" ]; then
+                if [[ "$SUFFIX" > "$LATEST_SUFFIX" ]]; then
                   LATEST_TAG="$tag"
+                  LATEST_YEAR="$YEAR"
+                  LATEST_SUFFIX="$SUFFIX"
                 fi
               fi
+              # If current has no suffix but latest has suffix, keep latest
+              # If both have no suffix, they are the same
             fi
           done
 
@@ -127,6 +134,8 @@ jobs:
             echo "Failed to determine latest tag"
             exit 1
           fi
+
+          echo "Latest tag determined: $LATEST_TAG"
 
           echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
