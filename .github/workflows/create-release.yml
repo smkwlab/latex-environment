@@ -43,14 +43,20 @@ jobs:
             TEMP_JSON=$(mktemp)
             trap 'rm -f "$TEMP_JSON"' EXIT
             
-            # Strip comments and validate JSON
-            if ! sed 's|//.*||g' .devcontainer/devcontainer.json | jq empty 2>/dev/null; then
+            # Strip JSONC comments and empty lines for jq processing
+            # Optimized: single pass with tee for efficiency and debugging
+            sed -e 's|//.*||g' -e '/^\s*$/d' .devcontainer/devcontainer.json | \
+              tee "$TEMP_JSON" | jq empty 2>/dev/null
+            
+            if [ $? -ne 0 ]; then
               echo "Error: Invalid JSON format in devcontainer.json (after comment removal)"
+              echo "Debug: First few lines of processed JSON:"
+              head -5 "$TEMP_JSON" 2>/dev/null || echo "Unable to read processed JSON"
+              echo ""
+              echo "Original file excerpt around comments:"
+              grep -n "//" .devcontainer/devcontainer.json | head -3 || echo "No // comments found"
               exit 1
             fi
-            
-            # Create clean JSON for processing
-            sed 's|//.*||g' .devcontainer/devcontainer.json > "$TEMP_JSON"
 
             # Get the actual texlive version using secure parsing
             NEW_VERSION=$(jq -r '.image // empty' "$TEMP_JSON" | \
