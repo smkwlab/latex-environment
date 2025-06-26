@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-vscode-remote.remote-containers"
+  ],
+  "unwantedRecommendations": [],
+  "important": [
+    "ms-vscode-remote.remote-containers"
+  ]
+}

@@ -46,5 +46,9 @@
 
   "forwardPorts": [],
 
-  "postCreateCommand": "echo 'LaTeX環境が準備できました！論文執筆を開始してください。'"
+  "postCreateCommand": [
+    "bash",
+    "-c",
+    "echo '🎉 LaTeX環境が準備できました！'; echo ''; echo '📝 LaTeX文書のコンパイルを開始するには:'; echo '  - Ctrl+Shift+P (macOS: Cmd+Shift+P)'; echo '  - \"LaTeX Workshop: Build LaTeX project\" を選択'; echo '  - または main.tex を開いて Ctrl+Alt+B (macOS: Cmd+Option+B)'; echo ''; echo '📖 詳細な使用方法は README.md をご確認ください。'"
+  ]
 }
