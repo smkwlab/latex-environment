@@ -39,13 +39,21 @@ jobs:
               exit 1
             fi
 
-            if ! jq empty .devcontainer/devcontainer.json 2>/dev/null; then
-              echo "Error: Invalid JSON format in devcontainer.json"
+            # Remove JSONC comments for jq processing
+            TEMP_JSON=$(mktemp)
+            trap 'rm -f "$TEMP_JSON"' EXIT
+            
+            # Strip comments and validate JSON
+            if ! sed 's|//.*||g' .devcontainer/devcontainer.json | jq empty 2>/dev/null; then
+              echo "Error: Invalid JSON format in devcontainer.json (after comment removal)"
               exit 1
             fi
+            
+            # Create clean JSON for processing
+            sed 's|//.*||g' .devcontainer/devcontainer.json > "$TEMP_JSON"
 
             # Get the actual texlive version using secure parsing
-            NEW_VERSION=$(jq -r '.image // empty' .devcontainer/devcontainer.json | \
+            NEW_VERSION=$(jq -r '.image // empty' "$TEMP_JSON" | \
               sed -n 's/.*texlive-ja-textlint://p')
 
             # Validate extracted version
