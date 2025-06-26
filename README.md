@@ -5,6 +5,12 @@ LaTeX の環境を、VSCode + devcontainer により構築する。
 
 本環境が用いるコンテナイメージは [texlive-ja-textlint](https://github.com/smkwlab/texlive-ja-textlint) で構築したものである。
 
+## ⚠️ 重要: 必須拡張機能のインストール
+
+**この環境を使用する前に、VSCode に Dev Containers 拡張機能が必ずインストールされている必要がある。**
+
+この拡張機能がないと、LaTeX環境が正常に動作しない。VSCodeでこのリポジトリを開いた際に表示される拡張機能のインストール推奨ダイアログで、**必ず「インストール」を選択すること。**
+
 ## 1. 基礎環境構築
 
 VSCode + devcontainer を利用するために、
