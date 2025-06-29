@@ -67,68 +67,8 @@ jobs:
             exit 1
           fi
 
-          # Sort tags by semantic versioning logic (year first, then letter suffix)
-          # Tags without suffix are oldest (e.g., 2025 < 2025b < 2025c < 2025d < 2025e)
-          LATEST_TAG=""
-          LATEST_YEAR=""
-          LATEST_SUFFIX=""
-          
-          for tag in $TAGS_JSON; do
-            echo "Checking tag: $tag"
-
-            # Enhanced input validation for tag format
-            if [[ ! "$tag" =~ ^[0-9]{4}[a-z]*$ ]]; then
-              echo "Warning: Invalid tag format detected, skipping: $tag" >&2
-              continue
-            fi
-
-            # Validate tag length (prevent excessively long input)
-            if [ ${#tag} -gt 10 ]; then
-              echo "Warning: Tag too long, skipping: $tag" >&2
-              continue
-            fi
-
-            # Extract year and suffix (e.g., 2025c -> year=2025, suffix=c)
-            YEAR=$(echo "$tag" | grep -oE '^[0-9]{4}')
-            SUFFIX=$(echo "$tag" | grep -oE '[a-z]*$')
-
-            # Validate extracted components
-            if [ -z "$YEAR" ] || [ ${#YEAR} -ne 4 ]; then
-              echo "Warning: Invalid year in tag, skipping: $tag" >&2
-              continue
-            fi
-
-            if [ -z "$LATEST_TAG" ]; then
-              LATEST_TAG="$tag"
-              LATEST_YEAR="$YEAR"
-              LATEST_SUFFIX="$SUFFIX"
-              continue
-            fi
-
-            # Compare year first
-            if [ "$YEAR" -gt "$LATEST_YEAR" ]; then
-              LATEST_TAG="$tag"
-              LATEST_YEAR="$YEAR"
-              LATEST_SUFFIX="$SUFFIX"
-            elif [ "$YEAR" -eq "$LATEST_YEAR" ]; then
-              # Same year, compare suffix (no suffix is oldest)
-              if [ -z "$LATEST_SUFFIX" ] && [ -n "$SUFFIX" ]; then
-                # Latest has no suffix, current has suffix -> current is newer
-                LATEST_TAG="$tag"
-                LATEST_YEAR="$YEAR"
-                LATEST_SUFFIX="$SUFFIX"
-              elif [ -n "$LATEST_SUFFIX" ] && [ -n "$SUFFIX" ]; then
-                # Both have suffix, compare alphabetically
-                if [[ "$SUFFIX" > "$LATEST_SUFFIX" ]]; then
-                  LATEST_TAG="$tag"
-                  LATEST_YEAR="$YEAR"
-                  LATEST_SUFFIX="$SUFFIX"
-                fi
-              fi
-              # If current has no suffix but latest has suffix, keep latest
-              # If both have no suffix, they are the same
-            fi
-          done
+          # Sort tags using version sort and get the latest
+          LATEST_TAG=$(echo "$TAGS_JSON" | sort -V | tail -n 1)
 
           if [ -z "$LATEST_TAG" ]; then
             echo "Failed to determine latest tag"
