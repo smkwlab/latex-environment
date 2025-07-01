@@ -80,20 +80,15 @@ jobs:
           echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
-          # Get current version from devcontainer.json using secure parsing
+          # Get current version from devcontainer.json
           if [ ! -f ".devcontainer/devcontainer.json" ]; then
             echo "Error: devcontainer.json not found"
             exit 1
           fi
 
-          # Validate JSON format first
-          if ! jq empty .devcontainer/devcontainer.json 2>/dev/null; then
-            echo "Error: Invalid JSON format in devcontainer.json"
-            exit 1
-          fi
-
-          # Extract version using jq for safer parsing
-          CURRENT_VERSION=$(jq -r '.image // empty' .devcontainer/devcontainer.json | \
+          # Extract version directly (handles JSONC comments)
+          CURRENT_VERSION=$(sed -e 's|//.*||g' .devcontainer/devcontainer.json | \
+            jq -r '.image // empty' 2>/dev/null | \
             sed -n 's/.*texlive-ja-textlint://p' | head -1)
 
           # Validate extracted version
