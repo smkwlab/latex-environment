@@ -1,4 +1,5 @@
 {
+    "plugins": ["latex2e", "html"],
     "filters": {
         "comments": true
     },
@@ -80,7 +81,6 @@
     "overrides": [
         {
             "files": ["*.html"],
-            "plugins": ["html"],
             "filters": {
                 "allowlist": {
                     "allow": [
@@ -108,7 +108,6 @@
         },
         {
             "files": ["*.tex", "*.latex"],
-            "plugins": ["latex2e"],
             "filters": {
                 "allowlist": {
                     "allow": [
