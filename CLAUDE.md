@@ -54,9 +54,11 @@ latexmk main.tex && latexmk -c
 
 ### Version Management
 ```bash
-# Check current version via image tag
-docker image inspect ghcr.io/smkwlab/texlive-ja-textlint:2025e | jq '.[0].Config.Labels'
-git describe --tags          # Show current tag version
+# Check current texlive version (primary versioning)
+grep "image.*texlive-ja-textlint" .devcontainer/devcontainer.json
+
+# For historical reference only (deprecated)
+git describe --tags          # Legacy tag information
 ```
 
 ### Template Usage

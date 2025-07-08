@@ -46,6 +46,10 @@ jobs:
       - name: Check if this is a latex environment update
         id: check
         run: |
+          # Initialize output variables
+          echo "environment_update=false" >> $GITHUB_OUTPUT
+          echo "update_type=none" >> $GITHUB_OUTPUT
+          
           # Check if any latex environment files were updated
           # This works for both direct commits and merge commits
           CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
@@ -100,13 +104,12 @@ jobs:
             echo "Current texlive version in devcontainer.json: $NEW_VERSION"
 
             if [[ -n "$NEW_VERSION" ]]; then
-              echo "texlive_update=true" >> $GITHUB_OUTPUT
+              echo "environment_update=true" >> $GITHUB_OUTPUT
               echo "texlive_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
               echo "Detected texlive update: $NEW_VERSION"
               echo "Will update release branch"
             else
-              echo "environment_update=false" >> $GITHUB_OUTPUT
               echo "No valid texlive version found in devcontainer.json"
             fi
 
@@ -121,8 +124,8 @@ jobs:
             echo "Will update release branch for environment changes"
 
           else
-            echo "environment_update=false" >> $GITHUB_OUTPUT
             echo "No latex environment files were updated"
+            echo "Skipping release branch update (environment_update=false)"
           fi
 
       - name: Update release branch
