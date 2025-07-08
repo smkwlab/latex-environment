@@ -33,7 +33,6 @@ textlint --fix *.tex          # Auto-fix issues where possible
 .latexmkrc                         # LaTeX compilation configuration
 .textlintrc                        # Japanese text linting rules
 main.tex                           # Default LaTeX document
-VERSION                            # Version tracking (release branch)
 ```
 
 ## Branch Strategy
@@ -55,9 +54,11 @@ latexmk main.tex && latexmk -c
 
 ### Version Management
 ```bash
-# Check current version
-cat VERSION                   # Show current version (release branch only)
-git describe --tags          # Show current tag version
+# Check current texlive version (primary versioning)
+grep "image.*texlive-ja-textlint" .devcontainer/devcontainer.json
+
+# For historical reference only (deprecated)
+git describe --tags          # Legacy tag information
 ```
 
 ### Template Usage
