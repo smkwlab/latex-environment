@@ -6,15 +6,13 @@ env:
   NON_STUDENT_FILES: |
     .github/workflows/check-texlive-updates.yml
     .github/workflows/create-release.yml
+    .claude/
     DEPENDENCY-UPDATE.md
     VERSIONS.md
     CHANGELOG.md
     CLAUDE.md
     docs/
     main.tex
-    test*.md
-    test*.tex
-    .textlintrc-test
 
 on:
   push:
@@ -23,15 +21,13 @@ on:
     paths-ignore:
       - '.github/workflows/check-texlive-updates.yml'
       - '.github/workflows/create-release.yml'
+      - '.claude/**'
       - 'DEPENDENCY-UPDATE.md'
       - 'VERSIONS.md'
       - 'CHANGELOG.md'
       - 'CLAUDE.md'
       - 'docs/**'
       - 'main.tex'
-      - 'test*.md'
-      - 'test*.tex'
-      - '.textlintrc-test'
   workflow_dispatch:
 
 permissions:
