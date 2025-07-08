@@ -39,7 +39,8 @@
         "MS-CEINTL.vscode-language-pack-ja",
         "GitHub.copilot",
         "ms-vscode.vscode-json",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "ms-vscode-remote.remote-containers"
       ]
     }
   },
