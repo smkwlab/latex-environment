@@ -1,0 +1,15 @@
+# Custom Dictionary Words
+breaklines
+dearu
+desumasu
+fullflexible
+keywordstyle
+lineskip
+ndkeywordstyle
+numbersep
+numberstyle
+stepnumber
+stringstyle
+textlint
+xleftmargin
+xrightmargin
