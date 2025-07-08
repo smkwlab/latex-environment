@@ -137,7 +137,8 @@ jobs:
           
           # Check for other latex environment file updates
           elif echo "$CHANGED_FILES" | grep -E "\.(vscode|cspell|textlintrc|latexmkrc)" >/dev/null || \
-               echo "$CHANGED_FILES" | grep -E "\.tex$|\.sty$|\.bib$" >/dev/null; then
+               echo "$CHANGED_FILES" | grep -E "\.tex$|\.sty$|\.bib$" >/dev/null || \
+               echo "$CHANGED_FILES" | grep -E "\.github/workflows/.*\.yml$" >/dev/null; then
             echo "LaTeX environment files updated - environment update detected"
             echo "update_type=environment" >> $GITHUB_OUTPUT
             echo "environment_update=true" >> $GITHUB_OUTPUT
