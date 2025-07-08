@@ -13,3 +13,4 @@ stringstyle
 textlint
 xleftmargin
 xrightmargin
+rsabst
