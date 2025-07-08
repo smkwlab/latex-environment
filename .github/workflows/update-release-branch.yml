@@ -1,0 +1,183 @@
+---
+name: Update Release Branch
+
+env:
+  # LaTeX環境に不要なファイル（一元管理）
+  NON_LATEX_ENVIRONMENT_FILES: |
+    .github/workflows/check-texlive-updates.yml
+    .github/workflows/update-release-branch.yml
+    .github/BRANCH_NAMING.md
+    .claude/
+    DEPENDENCY-UPDATE.md
+    CHANGELOG.md
+    CLAUDE.md
+    docs/
+    main.tex
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/check-texlive-updates.yml'
+      - '.github/workflows/update-release-branch.yml'
+      - '.github/BRANCH_NAMING.md'
+      - '.claude/**'
+      - 'DEPENDENCY-UPDATE.md'
+      - 'CHANGELOG.md'
+      - 'CLAUDE.md'
+      - 'docs/**'
+      - 'main.tex'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.WORKFLOW_UPDATE_TOKEN || github.token }}
+
+      - name: Check if this is a latex environment update
+        id: check
+        run: |
+          # Initialize output variables
+          echo "environment_update=false" >> $GITHUB_OUTPUT
+          echo "update_type=none" >> $GITHUB_OUTPUT
+          
+          # Check if any latex environment files were updated
+          # This works for both direct commits and merge commits
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          echo "Changed files: $CHANGED_FILES"
+
+          # Check for devcontainer.json updates (texlive updates)
+          if echo "$CHANGED_FILES" | grep -q "\.devcontainer/devcontainer\.json"; then
+            echo "devcontainer.json was updated - texlive update detected"
+            echo "update_type=texlive" >> $GITHUB_OUTPUT
+
+            # Validate devcontainer.json format first
+            if [ ! -f ".devcontainer/devcontainer.json" ]; then
+              echo "Error: devcontainer.json not found"
+              exit 1
+            fi
+
+            # Remove JSONC comments for jq processing
+            TEMP_JSON=$(mktemp)
+            trap 'rm -f "$TEMP_JSON"' EXIT
+
+            # Strip JSONC comments and empty lines for jq processing
+            # Optimized: single pass with tee for efficiency and debugging
+            sed -e 's|//.*||g' -e '/^\s*$/d' .devcontainer/devcontainer.json | \
+              tee "$TEMP_JSON" | jq empty 2>/dev/null
+
+            if [ $? -ne 0 ]; then
+              echo "Error: Invalid JSON format in devcontainer.json (after comment removal)"
+              echo "Debug: First few lines of processed JSON:"
+              head -5 "$TEMP_JSON" 2>/dev/null || echo "Unable to read processed JSON"
+              echo ""
+              echo "Original file excerpt around comments:"
+              grep -n "//" .devcontainer/devcontainer.json | head -3 || echo "No // comments found"
+              exit 1
+            fi
+
+            # Get the actual texlive version using secure parsing
+            NEW_VERSION=$(jq -r '.image // empty' "$TEMP_JSON" | \
+              sed -n 's/.*texlive-ja-textlint://p')
+
+            # Validate extracted version
+            if [ -z "$NEW_VERSION" ]; then
+              echo "Error: Could not extract texlive version from devcontainer.json"
+              exit 1
+            fi
+
+            # Validate version format
+            if [[ ! "$NEW_VERSION" =~ ^[0-9]{4}[a-z]*$ ]]; then
+              echo "Error: Invalid texlive version format: $NEW_VERSION"
+              exit 1
+            fi
+
+            echo "Current texlive version in devcontainer.json: $NEW_VERSION"
+
+            if [[ -n "$NEW_VERSION" ]]; then
+              echo "environment_update=true" >> $GITHUB_OUTPUT
+              echo "texlive_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+              echo "Detected texlive update: $NEW_VERSION"
+              echo "Will update release branch"
+            else
+              echo "No valid texlive version found in devcontainer.json"
+            fi
+
+          # Check for other latex environment file updates
+          elif echo "$CHANGED_FILES" | grep -E "\.(vscode|cspell|textlintrc|latexmkrc)" >/dev/null || \
+               echo "$CHANGED_FILES" | grep -E "\.tex$|\.sty$|\.bib$" >/dev/null || \
+               echo "$CHANGED_FILES" | grep -E "\.github/workflows/.*\.yml$" >/dev/null; then
+            echo "LaTeX environment files updated - environment update detected"
+            echo "update_type=environment" >> $GITHUB_OUTPUT
+            echo "environment_update=true" >> $GITHUB_OUTPUT
+
+            echo "Will update release branch for environment changes"
+
+          else
+            echo "No latex environment files were updated"
+            echo "Skipping release branch update (environment_update=false)"
+          fi
+
+      - name: Update release branch
+        if: steps.check.outputs.environment_update == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Create or update release branch (remove management files, keep user files)
+          git checkout -B release
+
+          # Remove non-latex environment files using centralized list
+          echo "${{ env.NON_LATEX_ENVIRONMENT_FILES }}" | while IFS= read -r pattern; do
+            [[ -z "$pattern" ]] && continue
+            echo "Removing pattern: $pattern"
+            # Handle glob patterns and regular files
+            if [[ "$pattern" == *"*"* ]]; then
+              # Use shell glob expansion for patterns with wildcards
+              for file in $pattern; do
+                [ -e "$file" ] && rm -rf "$file" || true
+              done
+            else
+              # Direct file/directory removal
+              rm -rf "$pattern" 2>/dev/null || true
+            fi
+          done
+
+          echo "Updating release branch with latest changes"
+
+          # No VERSION file management needed - using image tag for versioning
+
+          git add -A
+          if [[ "${{ steps.check.outputs.update_type }}" == "texlive" ]]; then
+            git commit -m "Update release branch for texlive-ja-textlint ${{ steps.check.outputs.texlive_version }}" || true
+          else
+            git commit -m "Update release branch for environment changes" || true
+          fi
+
+          # Push release branch
+          git push origin release --force
+
+      - name: Summary
+        if: steps.check.outputs.environment_update == 'true'
+        run: |
+          echo "🎉 Successfully updated latex-environment release branch"
+          echo ""
+          echo "Summary:"
+          if [[ "${{ steps.check.outputs.update_type }}" == "texlive" ]]; then
+            echo "  ✅ Updated release branch with texlive-ja-textlint: ${{ steps.check.outputs.texlive_version }}"
+          else
+            echo "  ✅ Updated release branch with environment configuration changes"
+          fi
+          echo ""
+          echo "📦 aldc will now provide updated environment to new repositories"
+          echo "🎉 Release branch automation is active!"
