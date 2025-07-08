@@ -33,7 +33,6 @@ textlint --fix *.tex          # Auto-fix issues where possible
 .latexmkrc                         # LaTeX compilation configuration
 .textlintrc                        # Japanese text linting rules
 main.tex                           # Default LaTeX document
-VERSION                            # Version tracking (release branch)
 ```
 
 ## Branch Strategy
@@ -55,8 +54,8 @@ latexmk main.tex && latexmk -c
 
 ### Version Management
 ```bash
-# Check current version
-cat VERSION                   # Show current version (release branch only)
+# Check current version via image tag
+docker image inspect ghcr.io/smkwlab/texlive-ja-textlint:2025e | jq '.[0].Config.Labels'
 git describe --tags          # Show current tag version
 ```
 
