@@ -2,7 +2,7 @@
 name: Create Release and Update Dependencies
 
 env:
-  # 学生環境に不要なファイル（一元管理）
+  # LaTeX環境に不要なファイル（一元管理）
   NON_STUDENT_FILES: |
     .github/workflows/check-texlive-updates.yml
     .github/workflows/create-release.yml
@@ -43,10 +43,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.WORKFLOW_UPDATE_TOKEN || github.token }}
 
-      - name: Check if this is a student environment update
+      - name: Check if this is a latex environment update
         id: check
         run: |
-          # Check if any student environment files were updated
+          # Check if any latex environment files were updated
           # This works for both direct commits and merge commits
           CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
           echo "Changed files: $CHANGED_FILES"
@@ -135,31 +135,47 @@ jobs:
               echo "No valid texlive version found in devcontainer.json"
             fi
           
-          # Check for other student environment file updates
+          # Check for other latex environment file updates
           elif echo "$CHANGED_FILES" | grep -E "\.(vscode|cspell|textlintrc|latexmkrc)" >/dev/null || \
                echo "$CHANGED_FILES" | grep -E "\.tex$|\.sty$|\.bib$" >/dev/null; then
-            echo "Student environment files updated - environment update detected"
+            echo "LaTeX environment files updated - environment update detected"
             echo "update_type=environment" >> $GITHUB_OUTPUT
             echo "environment_update=true" >> $GITHUB_OUTPUT
             
             # Generate environment update version
-            CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.5.5")
-            echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
-            
-            if [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+            if [[ -z "$CURRENT_TAG" ]]; then
+              echo "Warning: No tags found, starting from v0.1.0"
+              NEW_TAG="v0.1.0"
+            elif [[ "$CURRENT_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
               MAJOR=${BASH_REMATCH[1]}
               MINOR=${BASH_REMATCH[2]}
               PATCH=$((BASH_REMATCH[3] + 1))
               NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
             else
-              NEW_TAG="v0.5.6"
+              echo "Warning: Invalid tag format '$CURRENT_TAG', incrementing patch version"
+              # Extract numeric part and increment
+              VERSION_NUM=$(echo "$CURRENT_TAG" | sed 's/^v//' | grep -o '^[0-9]\+\.[0-9]\+\.[0-9]\+')
+              if [[ -n "$VERSION_NUM" ]]; then
+                if [[ "$VERSION_NUM" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+                  MAJOR=${BASH_REMATCH[1]}
+                  MINOR=${BASH_REMATCH[2]}
+                  PATCH=$((BASH_REMATCH[3] + 1))
+                  NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+                else
+                  NEW_TAG="v0.1.0"
+                fi
+              else
+                NEW_TAG="v0.1.0"
+              fi
             fi
+            echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
             echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
             echo "Will create environment release: $NEW_TAG"
           
           else
             echo "environment_update=false" >> $GITHUB_OUTPUT
-            echo "No student environment files were updated"
+            echo "No latex environment files were updated"
           fi
 
       - name: Update release branch
@@ -171,7 +187,7 @@ jobs:
           # Create or update release branch (remove management files, keep user files)
           git checkout -B release
 
-          # Remove non-student files using centralized list
+          # Remove non-latex environment files using centralized list
           echo "${{ env.NON_STUDENT_FILES }}" | while IFS= read -r pattern; do
             [[ -z "$pattern" ]] && continue
             echo "Removing pattern: $pattern"
