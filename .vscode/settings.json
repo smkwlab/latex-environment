@@ -30,6 +30,7 @@
             ]
         }
     ],
+    "latex-workshop.latex.outDir": "",
     "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.latex.watch.delay": 1000,
     "latex-workshop.synctex.afterBuild.enabled": true,
