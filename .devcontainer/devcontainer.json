@@ -3,7 +3,7 @@
   "name": "LaTeX Environment",
   "image": "ghcr.io/smkwlab/texlive-ja-textlint:2025h",
   
-  "remoteUser": "texuser",
+  "remoteUser": "root",
   
   "customizations": {
     "vscode": {
