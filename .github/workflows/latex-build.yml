@@ -14,10 +14,8 @@ jobs:
   build-and-release-pdf:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Build LaTeX with Docker
-        run: |
-          docker run --rm -v $(pwd):/workspace -w /workspace \
-            ghcr.io/smkwlab/texlive-ja-textlint:2025h \
-            latexmk -pdf main.tex || echo "No main.tex found, skipping build"
+      - uses: actions/checkout@v4
+      - uses: smkwlab/latex-release-action@v3.0.0
+        with:
+          files: main
+          cleanup: true
