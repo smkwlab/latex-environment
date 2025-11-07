@@ -48,6 +48,6 @@
   "postCreateCommand": [
     "bash",
     "-c",
-    "bash .devcontainer/setup-git-hooks.sh && echo '🎉 LaTeX環境が準備できました！'; echo ''; echo '📝 LaTeX文書のコンパイルを開始するには:'; echo '  - Ctrl+Shift+P (macOS: Cmd+Shift+P)'; echo '  - \"LaTeX Workshop: Build LaTeX project\" を選択'; echo '  - または sotsuron.tex (などの .tex ファイル) を開いて Ctrl+Alt+B (macOS: Cmd+Option+B)'; echo ''; echo '📖 詳細な使用方法は README.md を確認してください。'"
+    "bash .devcontainer/setup-git-hooks.sh || true && echo '🎉 LaTeX環境が準備できました！'; echo ''; echo '📝 LaTeX文書のコンパイルを開始するには:'; echo '  - Ctrl+Shift+P (macOS: Cmd+Shift+P)'; echo '  - \"LaTeX Workshop: Build LaTeX project\" を選択'; echo '  - または sotsuron.tex (などの .tex ファイル) を開いて Ctrl+Alt+B (macOS: Cmd+Option+B)'; echo ''; echo '📖 詳細な使用方法は README.md を確認してください。'"
   ]
 }
