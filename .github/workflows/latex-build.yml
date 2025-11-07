@@ -15,7 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: smkwlab/latex-release-action@v3.0.2
+      - uses: smkwlab/latex-release-action@v3.0.3
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
           files: main
           cleanup: true
