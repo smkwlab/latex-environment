@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: smkwlab/latex-release-action@v3.0.1
+      - uses: smkwlab/latex-release-action@v3.0.2
         with:
           files: main
           cleanup: true
