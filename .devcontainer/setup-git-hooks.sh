@@ -19,8 +19,7 @@ if [ "$BRANCH" = "main" ]; then
     echo "⚠️  警告: main ブランチにコミットしようとしています！"
     echo "=========================================="
     echo ""
-    echo "ドラフトブランチに切り替えてください:"
-    echo "  git checkout 0th-draft"
+    echo "ドラフトブランチ (xth-draft) に切り替えてください:"
     echo ""
     echo "コミットを中断しました。"
     exit 1
