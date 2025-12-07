@@ -15,13 +15,25 @@ jobs:
   academic-review:
     runs-on: ubuntu-latest
     steps:
+      - name: Check GEMINI_API_KEY
+        id: check-key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::notice::GEMINI_API_KEY is not configured. Skipping AI review."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Academic Paper Review Bot
-        uses: smkwlab/ai-academic-paper-reviewer@v1.1.0
+        if: steps.check-key.outputs.skip != 'true'
+        uses: smkwlab/ai-academic-paper-reviewer@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           LANGUAGE: "Japanese"
           USE_SINGLE_COMMENT_REVIEW: "false"
           EXCLUDE_PATHS: "*.bib,*.sty,*.cls,*.bbl,*.aux"
-          MODEL_CODE: "models/gemini-2.0-flash"
           REVIEW_MODE: "ACADEMIC"
