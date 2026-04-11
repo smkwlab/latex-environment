@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboard": true,
+  "dependencyDashboardLabels": ["dependencies"],
+  "extends": ["config:base", "workarounds:all"],
+  "timezone": "Asia/Tokyo",
+  "schedule": ["after 9pm on sunday"],
+  "semanticCommits": "enabled",
+  "packageRules": [
+    {
+      "description": "GitHub Actions version updates",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "labels": ["dependencies", "github-actions"],
+      "semanticCommitType": "ci"
+    },
+    {
+      "description": "Docker base image updates",
+      "matchManagers": ["dockerfile"],
+      "pinDigests": true,
+      "labels": ["dependencies", "docker"],
+      "semanticCommitType": "build"
+    },
+    {
+      "description": "npm dependency updates",
+      "matchManagers": ["npm"],
+      "labels": ["dependencies", "npm"],
+      "rangeStrategy": "bump",
+      "semanticCommitType": "chore"
+    }
+  ]
+}
