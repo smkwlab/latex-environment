@@ -15,7 +15,11 @@ The repository uses a Docker-based development container that automatically sets
 ### Build System
 - **latexmk**: Automated LaTeX compilation with dependency tracking
 - **Configuration**: `.latexmkrc` defines the build process:
-  - Default engines: `$latex=uplatex`, `$bibtex=upbibtex`, `$makeindex=upmendex`, `$dvipdf=dvipdfmx`, `$pdf_mode=3` (DVI → PDF)
+  - Default toolchain (`$pdf_mode=3`, i.e. DVI → PDF): `$latex` uses uplatex,
+    `$bibtex` uses upbibtex, `$makeindex` uses upmendex, `$dvipdf` uses dvipdfmx.
+    Each variable holds the full command string with options (e.g. `$latex` adds
+    `-synctex=1 -halt-on-error -file-line-error -interaction=nonstopmode`; `$dvipdf`
+    and `$makeindex` include `%O -o %D %S`) — see `.latexmkrc` for the exact strings.
   - Alternative: platex toolchain (commented out in config)
   - `.latexmkrc` only configures the engine commands; latexmk reruns each step as
     needed until cross-references, the index, and the bibliography are resolved
