@@ -6,7 +6,7 @@ This document provides detailed development guidance for latex-environment.
 
 ### Development Environment
 The repository uses a Docker-based development container that automatically sets up:
-- **TeXLive 2025** with full Japanese support (platex/uplatex)
+- **TeXLive 2025** with full Japanese support (uplatex/platex)
 - **textlint** for Japanese academic writing style checking
 - **TeXLab** for advanced LaTeX language support and real-time syntax checking
 - **VSCode extensions**: LaTeX Workshop, TeXLab, GitHub Pull Requests, textlint
@@ -15,8 +15,8 @@ The repository uses a Docker-based development container that automatically sets
 ### Build System
 - **latexmk**: Automated LaTeX compilation with dependency tracking
 - **Configuration**: `.latexmkrc` defines the build process:
-  - Default: platex → pbibtex → platex (×3) → dvipdfmx
-  - Alternative: uplatex toolchain (commented out in config)
+  - Default: uplatex → upbibtex → uplatex (×3) → dvipdfmx (index via upmendex)
+  - Alternative: platex toolchain (commented out in config)
 - **SyncTeX**: Bidirectional navigation between .tex source and PDF output
 
 ### CI/CD Workflow

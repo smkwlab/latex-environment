@@ -24,7 +24,7 @@ This document provides troubleshooting information for common issues in latex-en
 ### Container Environment
 ```bash
 # Check container environment
-docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2025b platex --version
+docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2025b uplatex --version
 
 # Test LaTeX installation
 docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2025b kpsewhich article.cls
