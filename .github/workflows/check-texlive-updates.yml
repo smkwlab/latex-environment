@@ -178,14 +178,18 @@ jobs:
         if: steps.check.outputs.update_needed == 'true'
         run: |
           # Update the image version in devcontainer.json
-          sed -i 's|"image": "ghcr.io/smkwlab/texlive-ja-textlint:[^"]*"|\
-            "image": "ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}"|' \
+          sed -i 's|"image": "
+  ghcr.io/smkwlab/texlive-ja-textlint:2026a
+            "image": "
+  ghcr.io/smkwlab/texlive-ja-textlint:2026a steps.check.outputs.latest_tag }}"|' \
             .devcontainer/devcontainer.json
 
           # Update the container image in workflow files (now using docker run instead of container mode)
           find .github/workflows \( -name "*.yml" -o -name "*.yaml" \) -print0 | \
-            xargs -0 sed -i 's|ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|\
-            ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
+            xargs -0 sed -i 's|
+  ghcr.io/smkwlab/texlive-ja-textlint:2026a
+            
+  ghcr.io/smkwlab/texlive-ja-textlint:2026a steps.check.outputs.latest_tag }}|g'
 
           # Commit the changes
           git add .devcontainer/devcontainer.json .github/workflows/
