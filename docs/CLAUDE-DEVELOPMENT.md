@@ -32,6 +32,17 @@ The repository uses a Docker-based development container that automatically sets
 - **Action**: Uses `smkwlab/latex-release-action@v2.2.0`
 - **Default target**: `main.tex` (configurable via `tex_file` input)
 
+### Workflow File Validation
+GitHub Actions YAML files are validated automatically to catch syntax
+errors before they cause failed runs:
+- **Workflow**: `.github/workflows/lint.yml`
+- **Triggers**: Pushes and PRs touching `.github/workflows/**` or `.yamllint.yml`
+- **Tools**:
+  - **yamllint** — YAML syntax and formatting (config in `.yamllint.yml`)
+  - **actionlint** — GitHub Actions schema, expressions, and `run:` shell checks
+- This mirrors the `smkwlab/.github` org-standard lint workflow, adding
+  yamllint because this repository ships a `.yamllint.yml` config.
+
 ### Version Management System
 - **VERSION file**: Tracks current version in release branch
 - **VERSIONS.md**: Compatibility matrix with texlive-ja-textlint
@@ -118,6 +129,33 @@ latexmk -c
 # Test textlint
 textlint *.tex
 ```
+
+### Validating Workflow Files Locally
+Run the same checks CI performs before pushing workflow changes:
+```bash
+# Install tools (macOS)
+brew install yamllint actionlint
+
+# Install tools (Ubuntu/Debian)
+#   yamllint: from apt (or `pipx install yamllint`)
+sudo apt-get install -y yamllint
+#   actionlint: download the pinned install script to a file, review it,
+#   then run it (avoids piping unreviewed remote code straight into bash).
+#   Version matches CI's rhysd/actionlint@v1.7.7. See
+#   https://github.com/rhysd/actionlint/blob/main/docs/install.md
+curl -sSfO https://raw.githubusercontent.com/rhysd/actionlint/v1.7.7/scripts/download-actionlint.bash
+bash download-actionlint.bash 1.7.7        # downloads ./actionlint
+sudo install actionlint /usr/local/bin/    # put it on PATH
+
+# YAML syntax and formatting (uses .yamllint.yml)
+yamllint -c .yamllint.yml .github/workflows/
+
+# GitHub Actions schema, expressions, and shell checks
+actionlint
+```
+Both commands should exit cleanly with no output. Fix any reported
+issues before committing — the `Lint Workflows` CI job runs these same
+checks on pull requests.
 
 ### Integration Testing
 - Test with both platex and uplatex workflows
