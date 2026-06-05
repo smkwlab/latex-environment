@@ -134,7 +134,7 @@ jobs:
           git fetch origin --prune
 
           # Check if branch exists locally or remotely
-          LOCAL_BRANCH=$(git branch --list "$BRANCH_NAME" | head -1)
+          LOCAL_BRANCH=$(git branch --list "$BRANCH_NAME" | tr -d ' *' | head -1)
           REMOTE_BRANCH=$(git ls-remote --heads origin "$BRANCH_NAME" | head -1)
 
           # Secure PR search with error handling
@@ -166,6 +166,7 @@ jobs:
           # Clean up any existing local branch before creating new one
           if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
             echo "Cleaning up existing local branch: $BRANCH_NAME"
+            echo "  Last commit: $(git log -1 --format='%h %s' "$BRANCH_NAME" 2>/dev/null || echo 'unknown')"
             git branch -D "$BRANCH_NAME"
           fi
 
