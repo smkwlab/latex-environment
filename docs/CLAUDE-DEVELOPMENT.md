@@ -136,8 +136,13 @@ Run the same checks CI performs before pushing workflow changes:
 # Install tools (macOS)
 brew install yamllint actionlint
 
-# Install tools (Ubuntu/Debian: yamllint via apt, actionlint via release binary)
+# Install tools (Ubuntu/Debian)
+#   yamllint: from apt (or `pipx install yamllint`)
 sudo apt-get install -y yamllint
+#   actionlint: download the latest release binary into the current dir
+#   (see https://github.com/rhysd/actionlint/blob/main/docs/install.md)
+bash <(curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+#   then run it as ./actionlint (or move it onto your PATH)
 
 # YAML syntax and formatting (uses .yamllint.yml)
 yamllint -c .yamllint.yml .github/workflows/

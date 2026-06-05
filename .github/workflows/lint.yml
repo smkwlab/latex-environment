@@ -27,6 +27,9 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
 
+      - name: Install yamllint
+        run: pipx install yamllint==1.35.1
+
       - name: Run yamllint
         run: yamllint -c .yamllint.yml .github/workflows/
 
