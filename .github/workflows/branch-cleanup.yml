@@ -94,7 +94,9 @@ jobs:
 
       - name: Report cleanup summary
         run: |
-          REMAINING_BRANCHES=$(git branch -r | grep -vc "origin/main\|origin/HEAD\|origin/release")
+          # grep -vc exits 1 when the count is 0; '|| true' keeps the numeric
+          # output and prevents the step from failing under 'set -eo pipefail'
+          REMAINING_BRANCHES=$(git branch -r | grep -vc "origin/main\|origin/HEAD\|origin/release" || true)
           echo "📊 Cleanup Summary:"
           echo "  - Remaining feature branches: $REMAINING_BRANCHES"
           echo "  - Protected branches: main, release"
