@@ -33,7 +33,7 @@ jobs:
 
           if [ "$REMAINING" -lt 50 ]; then
             echo "Warning: GitHub API rate limit is low (remaining: $REMAINING)"
-            echo "Rate limit resets at: $(date -d @$RESET_TIME)"
+            echo "Rate limit resets at: $(date -d "@$RESET_TIME")"
             if [ "$REMAINING" -lt 10 ]; then
               echo "Error: GitHub API rate limit nearly exceeded. Exiting to prevent failures."
               exit 1
@@ -78,7 +78,7 @@ jobs:
           echo "Latest tag determined: $LATEST_TAG"
 
           echo "Latest texlive-ja-textlint tag: $LATEST_TAG"
-          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
           # Get current version from devcontainer.json
           if [ ! -f ".devcontainer/devcontainer.json" ]; then
@@ -104,15 +104,15 @@ jobs:
           fi
 
           echo "Current version in devcontainer.json: $CURRENT_VERSION"
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
 
           # Check if update is needed
           if [ "$LATEST_TAG" != "$CURRENT_VERSION" ]; then
             echo "Update needed: $CURRENT_VERSION -> $LATEST_TAG"
-            echo "update_needed=true" >> $GITHUB_OUTPUT
+            echo "update_needed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No update needed"
-            echo "update_needed=false" >> $GITHUB_OUTPUT
+            echo "update_needed=false" >> "$GITHUB_OUTPUT"
           fi
         env:
           GH_TOKEN: ${{ github.token }}
@@ -159,7 +159,7 @@ jobs:
             [ -n "$REMOTE_BRANCH" ] && echo "  - Remote branch exists: $BRANCH_NAME"
             [ -n "$EXISTING_PR" ] && echo "  - PR exists: #$EXISTING_PR"
             echo "Skipping duplicate update."
-            echo "update_needed=false" >> $GITHUB_OUTPUT
+            echo "update_needed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -171,7 +171,7 @@ jobs:
           fi
 
           git checkout -b "$BRANCH_NAME"
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "branch_name=$BRANCH_NAME" >> "$GITHUB_ENV"
 
       - name: Update all texlive-ja-textlint references
         if: steps.check.outputs.update_needed == 'true'
@@ -182,7 +182,7 @@ jobs:
             .devcontainer/devcontainer.json
 
           # Update the container image in workflow files (now using docker run instead of container mode)
-          find .github/workflows -name "*.yml" -o -name "*.yaml" -print0 | \
+          find .github/workflows \( -name "*.yml" -o -name "*.yaml" \) -print0 | \
             xargs -0 sed -i 's|ghcr.io/smkwlab/texlive-ja-textlint:[^[:space:]]*|\
             ghcr.io/smkwlab/texlive-ja-textlint:${{ steps.check.outputs.latest_tag }}|g'
 

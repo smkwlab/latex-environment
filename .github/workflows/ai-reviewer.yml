@@ -22,9 +22,9 @@ jobs:
         run: |
           if [ -z "$GEMINI_API_KEY" ]; then
             echo "::notice::GEMINI_API_KEY is not configured. Skipping AI review."
-            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "skip=true" >> "$GITHUB_OUTPUT"
           else
-            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Academic Paper Review Bot

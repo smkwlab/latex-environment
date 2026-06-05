@@ -15,18 +15,21 @@ jobs:
 
     steps:
       - name: Log cleanup status
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
-          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
           echo "✅ PR #${{ github.event.number }} was merged"
-          echo "📝 GitHub auto-deleted branch: $BRANCH_NAME"
+          echo "📝 GitHub auto-deleted branch: $HEAD_REF"
 
       - name: Check for related cleanup needs
         if: >
           startsWith(github.event.pull_request.head.ref, 'update/') ||
           startsWith(github.event.pull_request.head.ref, 'experiment/') ||
           startsWith(github.event.pull_request.head.ref, 'test/')
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
-          BRANCH_TYPE="${{ github.event.pull_request.head.ref }}"
+          BRANCH_TYPE="$HEAD_REF"
           echo "🔍 Special branch type detected: $BRANCH_TYPE"
           if [[ "$BRANCH_TYPE" == update/* ]]; then
             echo "📦 Update branch merged - checking for related stale branches"

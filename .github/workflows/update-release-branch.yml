@@ -47,8 +47,8 @@ jobs:
         id: check
         run: |
           # Initialize output variables
-          echo "environment_update=false" >> $GITHUB_OUTPUT
-          echo "update_type=none" >> $GITHUB_OUTPUT
+          echo "environment_update=false" >> "$GITHUB_OUTPUT"
+          echo "update_type=none" >> "$GITHUB_OUTPUT"
 
           # Check if any latex environment files were updated
           # This works for both direct commits and merge commits
@@ -58,7 +58,7 @@ jobs:
           # Check for devcontainer.json updates (texlive updates)
           if echo "$CHANGED_FILES" | grep -q "\.devcontainer/devcontainer\.json"; then
             echo "devcontainer.json was updated - texlive update detected"
-            echo "update_type=texlive" >> $GITHUB_OUTPUT
+            echo "update_type=texlive" >> "$GITHUB_OUTPUT"
 
             # Validate devcontainer.json format first
             if [ ! -f ".devcontainer/devcontainer.json" ]; then
@@ -72,10 +72,8 @@ jobs:
 
             # Strip JSONC comments and empty lines for jq processing
             # Optimized: single pass with tee for efficiency and debugging
-            sed -e 's|//.*||g' -e '/^\s*$/d' .devcontainer/devcontainer.json | \
-              tee "$TEMP_JSON" | jq empty 2>/dev/null
-
-            if [ $? -ne 0 ]; then
+            if ! sed -e 's|//.*||g' -e '/^\s*$/d' .devcontainer/devcontainer.json | \
+              tee "$TEMP_JSON" | jq empty 2>/dev/null; then
               echo "Error: Invalid JSON format in devcontainer.json (after comment removal)"
               echo "Debug: First few lines of processed JSON:"
               head -5 "$TEMP_JSON" 2>/dev/null || echo "Unable to read processed JSON"
@@ -104,8 +102,8 @@ jobs:
             echo "Current texlive version in devcontainer.json: $NEW_VERSION"
 
             if [[ -n "$NEW_VERSION" ]]; then
-              echo "environment_update=true" >> $GITHUB_OUTPUT
-              echo "texlive_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+              echo "environment_update=true" >> "$GITHUB_OUTPUT"
+              echo "texlive_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
               echo "Detected texlive update: $NEW_VERSION"
               echo "Will update release branch"
@@ -118,8 +116,8 @@ jobs:
                echo "$CHANGED_FILES" | grep -E "\.tex$|\.sty$|\.bib$" >/dev/null || \
                echo "$CHANGED_FILES" | grep -E "\.github/workflows/.*\.yml$" >/dev/null; then
             echo "LaTeX environment files updated - environment update detected"
-            echo "update_type=environment" >> $GITHUB_OUTPUT
-            echo "environment_update=true" >> $GITHUB_OUTPUT
+            echo "update_type=environment" >> "$GITHUB_OUTPUT"
+            echo "environment_update=true" >> "$GITHUB_OUTPUT"
 
             echo "Will update release branch for environment changes"
 
