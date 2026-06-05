@@ -30,10 +30,8 @@ jobs:
         run: |
           echo "🧹 Starting automatic branch cleanup..."
 
-          # Get all remote branches except protected ones
-          PROTECTED_BRANCHES="main|release|HEAD"
-
           # Find branches that have been merged into main
+          # (protected branches main/release/HEAD are excluded by the grep -v filters below)
           git remote prune origin
 
           MERGED_BRANCHES=$(git branch -r --merged origin/main | \
@@ -54,7 +52,7 @@ jobs:
 
           # Delete merged branches (limit to 10 per run for safety)
           echo "$MERGED_BRANCHES" | while read -r branch; do
-            if [ ! -z "$branch" ]; then
+            if [ -n "$branch" ]; then
               echo "Deleting branch: $branch"
               git push origin --delete "$branch" || \
                 echo "Failed to delete $branch (may not exist)"
@@ -72,7 +70,7 @@ jobs:
           STALE_BRANCHES=$(git for-each-ref \
             --format='%(refname:short) %(committerdate:unix)' \
             refs/remotes/origin/update-* | \
-            awk -v cutoff=$CUTOFF '$2 < cutoff {print $1}' | \
+            awk -v cutoff="$CUTOFF" '$2 < cutoff {print $1}' | \
             sed 's/origin\///' | \
             head -5)
 
@@ -86,7 +84,7 @@ jobs:
 
           # Delete stale branches
           echo "$STALE_BRANCHES" | while read -r branch; do
-            if [ ! -z "$branch" ]; then
+            if [ -n "$branch" ]; then
               echo "Deleting stale branch: $branch"
               git push origin --delete "$branch" || echo "Failed to delete $branch"
             fi
@@ -96,7 +94,9 @@ jobs:
 
       - name: Report cleanup summary
         run: |
-          REMAINING_BRANCHES=$(git branch -r | grep -v "origin/main\|origin/HEAD\|origin/release" | wc -l)
+          # grep -vc exits 1 when the count is 0; '|| true' keeps the numeric
+          # output and prevents the step from failing under 'set -eo pipefail'
+          REMAINING_BRANCHES=$(git branch -r | grep -vc "origin/main\|origin/HEAD\|origin/release" || true)
           echo "📊 Cleanup Summary:"
           echo "  - Remaining feature branches: $REMAINING_BRANCHES"
           echo "  - Protected branches: main, release"
