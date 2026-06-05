@@ -194,9 +194,9 @@ jobs:
           # this repo pins the image, so rewriting .github/workflows would only
           # corrupt this file's own sed scripts.
           git add "$DC"
-          git commit -m "Update texlive-ja-textlint to ${TAG}
-
-          - Update devcontainer.json image reference and compatibility comment"
+          git commit \
+            -m "Update texlive-ja-textlint to ${TAG}" \
+            -m "Update devcontainer.json image reference and compatibility comment"
 
       - name: Push changes
         if: steps.check.outputs.update_needed == 'true'
