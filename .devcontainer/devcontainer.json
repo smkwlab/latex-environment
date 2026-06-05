@@ -1,7 +1,7 @@
 {
-  // Compatible with texlive-ja-textlint: 2025i (TeXLive 2025)
+  // Compatible with texlive-ja-textlint: 2026a (TeXLive 2026)
   "name": "LaTeX Environment",
-  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2025i",
+  "image": "ghcr.io/smkwlab/texlive-ja-textlint:2026a",
   
   "remoteUser": "root",
   
