@@ -1,0 +1,41 @@
+---
+# Lint Workflows
+#
+# Validates GitHub Actions workflow files using yamllint and actionlint
+# to catch YAML syntax errors and workflow mistakes before they cause
+# failed runs. Mirrors the smkwlab/.github org-standard lint workflow,
+# adding yamllint because this repository ships a .yamllint.yml config.
+
+name: Lint Workflows
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/**', '.yamllint.yml']
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/**', '.yamllint.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+
+      - name: Run yamllint
+        run: yamllint -c .yamllint.yml .github/workflows/
+
+  actionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+
+      - name: Run actionlint
+        uses: rhysd/actionlint@v1.7.7
