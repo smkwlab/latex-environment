@@ -33,7 +33,8 @@ jobs:
 
           if [ "$REMAINING" -lt 50 ]; then
             echo "Warning: GitHub API rate limit is low (remaining: $REMAINING)"
-            echo "Rate limit resets at: $(date -d "@$RESET_TIME")"
+            RESET_HUMAN=$(date -d "@$RESET_TIME")
+            echo "Rate limit resets at: $RESET_HUMAN"
             if [ "$REMAINING" -lt 10 ]; then
               echo "Error: GitHub API rate limit nearly exceeded. Exiting to prevent failures."
               exit 1
