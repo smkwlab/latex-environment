@@ -139,10 +139,12 @@ brew install yamllint actionlint
 # Install tools (Ubuntu/Debian)
 #   yamllint: from apt (or `pipx install yamllint`)
 sudo apt-get install -y yamllint
-#   actionlint: download the latest release binary into the current dir
-#   (see https://github.com/rhysd/actionlint/blob/main/docs/install.md)
-bash <(curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-#   then run it as ./actionlint (or move it onto your PATH)
+#   actionlint: download a pinned release binary, then put it on PATH so
+#   the `actionlint` command below resolves (version matches CI's
+#   rhysd/actionlint@v1.7.7). See
+#   https://github.com/rhysd/actionlint/blob/main/docs/install.md
+bash <(curl -sSf https://raw.githubusercontent.com/rhysd/actionlint/v1.7.7/scripts/download-actionlint.bash) 1.7.7
+sudo install actionlint /usr/local/bin/
 
 # YAML syntax and formatting (uses .yamllint.yml)
 yamllint -c .yamllint.yml .github/workflows/
