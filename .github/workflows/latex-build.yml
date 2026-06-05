@@ -21,3 +21,7 @@ jobs:
         with:
           files: main
           cleanup: true
+          # Only create a release on tag pushes. On pull_request_target the
+          # build just validates compilation; creating a release every push
+          # fails with "release already exists" on the second and later runs.
+          skip_release: ${{ github.event_name != 'push' }}
