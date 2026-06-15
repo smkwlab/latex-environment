@@ -24,7 +24,7 @@ textlint --fix *.tex          # Auto-fix issues where possible
 - **TeXLive 2025** with full Japanese support (uplatex/platex)
 - **textlint** for Japanese academic writing style checking
 - **VSCode devcontainer** with LaTeX Workshop and TeXLab
-- **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2025b`
+- **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2026a` (source of truth: `.devcontainer/devcontainer.json`)
 
 ## Key Files & Structure
 
