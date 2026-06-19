@@ -2,14 +2,13 @@
   // Compatible with texlive-ja-textlint: 2026a (TeXLive 2026)
   "name": "LaTeX Environment",
   "image": "ghcr.io/smkwlab/texlive-ja-textlint:2026a",
-  
+
   "remoteUser": "root",
-  
+
   "customizations": {
     "vscode": {
       "settings": {
         "textlint.nodePath": "/npm/node_modules",
-        "editor.fontFamily": "HackGen, 'BIZ UDPGothic', Meiryo, 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
         "editor.fontSize": 14,
         "editor.lineHeight": 1.6,
         "editor.wordWrap": "on",
@@ -19,11 +18,8 @@
         "latex-workshop.latex.watch.delay": 1000,
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.fontSize": 14,
-        "terminal.integrated.fontFamily": "HackGen, 'BIZ UDPGothic', Meiryo, 'Hiragino Kaku Gothic ProN', 'SF Mono', Consolas, monospace",
         "git.enableSmartCommit": true,
-        "git.confirmSync": false,
-        "workbench.colorTheme": "Default Light+",
-        "window.zoomLevel": 0
+        "git.confirmSync": false
       },
 
       "extensions": [
