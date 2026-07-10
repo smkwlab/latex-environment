@@ -181,7 +181,7 @@ checks on pull requests.
 
 #### Supporting Tools
 - **ai-academic-paper-reviewer**: AI-powered academic paper review GitHub Action
-- **thesis-management-tools**: Administrative tools and workflows
+- **student-repo-management**: Administrative tools and workflows
 
 ### Dependency Chain
 ```
@@ -199,7 +199,7 @@ Supporting Infrastructure:
 ├── latex-release-action → (Used by LaTeX templates)
 ├── ai-academic-paper-reviewer → (Used by thesis repos)
 ├── aldc → (Deploys this environment)
-└── thesis-management-tools → (Management workflows)
+└── student-repo-management → (Management workflows)
 ```
 
 ### Version Coordination
