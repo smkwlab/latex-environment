@@ -15,7 +15,7 @@ npm install -g textlint-plugin-html
 
 # Or use Docker environment (recommended for users)
 docker run --rm -v "$(pwd)":/workspace -w /workspace \
-  ghcr.io/smkwlab/texlive-ja-textlint:2025e \
+  ghcr.io/smkwlab/texlive-ja-textlint:2026a \
   /npm/node_modules/.bin/textlint README.md
 ```
 
@@ -54,7 +54,7 @@ textlint --fix README.md  # FORBIDDEN
 - **Technical Terms**: Follow terminology standards (JavaScript, GitHub, LaTeX, etc.)
 
 ### Mixed Language Documents
-- **English Technical Documentation**: VERSIONS.md, CHANGELOG.md may exceed length limits
+- **English Technical Documentation**: CHANGELOG.md, DEPENDENCY-UPDATE.md may exceed length limits
 - **Code Examples**: Filtered out from textlint checks
 - **URLs and Links**: Excluded from length and style checks
 
@@ -108,4 +108,3 @@ git commit -m "Update README with quality improvements"
 - Update CLAUDE.md for workflow changes
 - Keep README.md user-focused
 - Document breaking changes in CHANGELOG.md
-- Update VERSIONS.md for compatibility changes

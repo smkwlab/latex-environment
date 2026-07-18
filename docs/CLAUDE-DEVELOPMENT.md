@@ -10,7 +10,7 @@ The repository uses a Docker-based development container that automatically sets
 - **textlint** for Japanese academic writing style checking
 - **TeXLab** for advanced LaTeX language support and real-time syntax checking
 - **VSCode extensions**: LaTeX Workshop, TeXLab, GitHub Pull Requests, textlint
-- **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2025b`
+- **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2026a` (source of truth: `.devcontainer/devcontainer.json`)
 
 ### Build System
 - **latexmk**: Automated LaTeX compilation with dependency tracking
@@ -29,7 +29,7 @@ The repository uses a Docker-based development container that automatically sets
 - **GitHub Actions**: Automatically builds PDFs on:
   - Pull requests (for review)
   - Tags (for releases)
-- **Action**: Uses `smkwlab/latex-release-action@v2.2.0`
+- **Action**: Uses `smkwlab/latex-release-action` (the current version is pinned in `.github/workflows/latex-build.yml`)
 - **Default target**: `main.tex` (configurable via `tex_file` input)
 
 ### Workflow File Validation
@@ -44,10 +44,11 @@ errors before they cause failed runs:
   yamllint because this repository ships a `.yamllint.yml` config.
 
 ### Version Management System
-- **VERSION file**: Tracks current version in release branch
-- **VERSIONS.md**: Compatibility matrix with texlive-ja-textlint
+- **Primary versioning**: the texlive-ja-textlint image tag in
+  `.devcontainer/devcontainer.json` (legacy git tags are deprecated)
 - **CHANGELOG.md**: Release history and migration notes
-- **Automated updates**: GitHub Actions manage version increments
+- **Automated updates**: `check-texlive-updates.yml` opens a PR when a new
+  texlive-ja-textlint image is released
 
 ### Branch Strategy
 - **main**: Development branch with full management files
@@ -61,15 +62,18 @@ The release branch contains only files needed by template users:
 - README.md (usage instructions)
 - .devcontainer/ (container configuration)
 - .latexmkrc, .textlintrc (LaTeX settings)
-- .github/workflows/autoassignees.yml (user workflow)
-- .github/workflows/latex-build.yml (user workflow)
-- VERSION (version tracking)
+- User-facing workflows (latex-build.yml, ai-reviewer.yml,
+  branch-cleanup.yml, pr-auto-cleanup.yml)
 
 **Excluded from release branch:**
-- CLAUDE.md (development-specific)
-- VERSIONS.md, CHANGELOG.md (management docs)
-- DEPENDENCY-UPDATE.md (maintenance procedures)
-- Management workflows (check-texlive-updates.yml, create-release.yml)
+- CLAUDE.md, docs/ (development-specific)
+- CHANGELOG.md, DEPENDENCY-UPDATE.md (management docs)
+- Management workflows (check-texlive-updates.yml,
+  update-release-branch.yml, lint.yml)
+- main.tex (students provide their own documents)
+
+The authoritative exclusion list is `NON_LATEX_ENVIRONMENT_FILES` in
+`.github/workflows/update-release-branch.yml`.
 
 ## File Structure Conventions
 
@@ -80,8 +84,6 @@ The release branch contains only files needed by template users:
 - `.devcontainer/devcontainer.json`: Container environment setup
 
 ### Management Files (main branch only)
-- `VERSION`: Version tracking for release branch
-- `VERSIONS.md`: Compatibility matrix
 - `CHANGELOG.md`: Release history
 - `DEPENDENCY-UPDATE.md`: Update procedures for maintainers
 
@@ -110,10 +112,11 @@ The release branch contains only files needed by template users:
 4. GitHub Actions will automatically create release
 
 ### For Version Management
-1. Follow semantic versioning (MAJOR.MINOR.PATCH)
+1. The texlive-ja-textlint image tag in `.devcontainer/devcontainer.json`
+   is the primary version identifier (legacy semantic-version git tags are
+   deprecated)
 2. Update CHANGELOG.md for notable changes
-3. VERSIONS.md compatibility matrix is manually maintained
-4. Release creation is automated via GitHub Actions
+3. Release branch updates are automated via `update-release-branch.yml`
 
 ## Testing Guidelines
 
