@@ -24,10 +24,10 @@ This document provides troubleshooting information for common issues in latex-en
 ### Container Environment
 ```bash
 # Check container environment
-docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2026a uplatex --version
+docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2026b uplatex --version
 
 # Test LaTeX installation
-docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2026a kpsewhich article.cls
+docker run --rm ghcr.io/smkwlab/texlive-ja-textlint:2026b kpsewhich article.cls
 
 # Check textlint rules
 npx textlint --print-config

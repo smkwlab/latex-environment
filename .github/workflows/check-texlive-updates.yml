@@ -184,16 +184,30 @@ jobs:
           steps.branch.outputs.skip != 'true'
         run: |
           TAG="${{ steps.check.outputs.latest_tag }}"
-          TEXLIVE_YEAR="${TAG:0:4}"
           IMAGE="ghcr.io/smkwlab/texlive-ja-textlint"
           DC=".devcontainer/devcontainer.json"
+
+          # The year in a tag is the image release year, NOT the TeX Live
+          # version: 2026a and 2026b both ship the frozen TL2025 snapshot.
+          # Read the year the image actually pins instead of slicing the tag.
+          # The pin has been spelled TL_REPO and TL_SNAPSHOT over time, so match
+          # the snapshot path itself, which appears once per Dockerfile.
+          TEXLIVE_YEAR=$(gh api "repos/smkwlab/texlive-ja-textlint/contents/debian/Dockerfile?ref=${TAG}" \
+            --jq '.content' | base64 -d \
+            | sed -n 's|.*systems/texlive/\([0-9]\{4\}\)/.*|\1|p' | head -1)
 
           # Update the image tag (single-line replacement; must not span lines,
           # otherwise sed embeds a stray newline into devcontainer.json)
           sed -i "s|\"image\": \"${IMAGE}:[^\"]*\"|\"image\": \"${IMAGE}:${TAG}\"|" "$DC"
 
-          # Keep the compatibility comment in sync with the image tag
-          COMMENT="// Compatible with texlive-ja-textlint: ${TAG} (TeXLive ${TEXLIVE_YEAR})"
+          # Keep the compatibility comment in sync with the image tag. Drop the
+          # TeX Live part rather than emit a blank year if the lookup failed.
+          if [ -n "$TEXLIVE_YEAR" ]; then
+            COMMENT="// Compatible with texlive-ja-textlint: ${TAG} (TeXLive ${TEXLIVE_YEAR})"
+          else
+            echo "::warning::Could not determine the TeX Live year pinned by ${TAG}"
+            COMMENT="// Compatible with texlive-ja-textlint: ${TAG}"
+          fi
           sed -i "s|// Compatible with texlive-ja-textlint:.*|${COMMENT}|" "$DC"
 
           # Commit the change. Only devcontainer.json is touched: no workflow in
@@ -203,6 +217,8 @@ jobs:
           git commit \
             -m "Update texlive-ja-textlint to ${TAG}" \
             -m "Update devcontainer.json image reference and compatibility comment"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Push changes
         if: >-
