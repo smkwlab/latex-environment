@@ -7,6 +7,7 @@ env:
     .github/workflows/check-texlive-updates.yml
     .github/workflows/update-release-branch.yml
     .github/workflows/lint.yml
+    .github/workflows/ai-code-review.yml
     .github/BRANCH_NAMING.md
     .claude/
     DEPENDENCY-UPDATE.md
@@ -23,6 +24,7 @@ on:
       - '.github/workflows/check-texlive-updates.yml'
       - '.github/workflows/update-release-branch.yml'
       - '.github/workflows/lint.yml'
+      - '.github/workflows/ai-code-review.yml'
       - '.github/BRANCH_NAMING.md'
       - '.claude/**'
       - 'DEPENDENCY-UPDATE.md'
