@@ -10,7 +10,7 @@ The repository uses a Docker-based development container that automatically sets
 - **textlint** for Japanese academic writing style checking
 - **TeXLab** for advanced LaTeX language support and real-time syntax checking
 - **VSCode extensions**: LaTeX Workshop, TeXLab, GitHub Pull Requests, textlint
-- **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2026b` (source of truth: `.devcontainer/devcontainer.json`)
+- **Base image**: `ghcr.io/smkwlab/texlive-ja-textlint:2026d` (source of truth: `.devcontainer/devcontainer.json`)
 
 ### Build System
 - **latexmk**: Automated LaTeX compilation with dependency tracking
