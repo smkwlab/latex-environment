@@ -15,7 +15,7 @@ npm install -g textlint-plugin-html
 
 # Or use Docker environment (recommended for users)
 docker run --rm -v "$(pwd)":/workspace -w /workspace \
-  ghcr.io/smkwlab/texlive-ja-textlint:2026d \
+  ghcr.io/smkwlab/texlive-ja-textlint:2026e \
   /npm/node_modules/.bin/textlint README.md
 ```
 
