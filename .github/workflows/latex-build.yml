@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: smkwlab/latex-release-action@v3
+      - uses: smkwlab/latex-release-action@f7e3b9bd7655eeac8870d2e1b4534078bb91c04b # v3
         env:
           GH_TOKEN: ${{ github.token }}
         with:
