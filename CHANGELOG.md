@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration for Japanese LaTeX diagnostics filtering
 
 ### Changed
-- Updated devcontainer.json to include the efoerster.texlab extension
+- Updated devcontainer.json to include the TeXLab extension
 - Enhanced .vscode/settings.json with TeXLab configuration
 - Improved development experience with real-time error detection
 
