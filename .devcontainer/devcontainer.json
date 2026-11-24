@@ -24,7 +24,7 @@
 
       "extensions": [
         "james-yu.latex-workshop",
-        "texlab-org.texlab",
+        "efoerster.texlab",
         "GitHub.vscode-pull-request-github",
         "3w36zj6.textlint",
         "tomoki1207.pdf",
@@ -32,7 +32,6 @@
         "mhutchie.git-graph",
         "MS-CEINTL.vscode-language-pack-ja",
         "GitHub.copilot",
-        "ms-vscode.vscode-json",
         "redhat.vscode-yaml",
         "ms-vscode-remote.remote-containers"
       ]

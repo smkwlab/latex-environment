@@ -15,9 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration for Japanese LaTeX diagnostics filtering
 
 ### Changed
-- Updated devcontainer.json to include texlab-org.texlab extension
+- Updated devcontainer.json to include the TeXLab extension
 - Enhanced .vscode/settings.json with TeXLab configuration
 - Improved development experience with real-time error detection
+
+### Fixed
+- Correct the TeXLab extension ID: `texlab-org.texlab` does not exist in the
+  Marketplace, so the extension was never installed and the `texlab.*` settings
+  in `.vscode/settings.json` never took effect (#166)
+- Drop `ms-vscode.vscode-json`: that ID does not exist either, and JSON support
+  is built into VS Code (#166)
 
 ## [0.5.0] - 2025-06-13
 
